@@ -1,15 +1,12 @@
 import { stringify } from "yaml";
-import type { Config } from "./types/erpcConfig";
+import type { Config } from "./generatedTypes/erpcTypes";
 
 /**
  * Create an erpc config
  * @param config
  * @param outputPath
  */
-export function createErpcConfig(
-    config: Config,
-    outputPath = "erpc.yaml"
-): void {
+export function createErpcConfig(config: Config, outputPath = "erpc.yaml") {
     // todo: Should use a mapping of types key to yaml key from initial go types
 
     const yamlStr = stringify(config, {

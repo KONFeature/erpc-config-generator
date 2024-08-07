@@ -1,3 +1,0 @@
-[submodule "lib/erpc"]
-	path = lib/erpc
-	url = https://github.com/erpc/erpc.git
