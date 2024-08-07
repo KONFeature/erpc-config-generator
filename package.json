@@ -1,0 +1,19 @@
+{
+  "name": "erpc-config-generator",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "biome check --write src/",
+    "format:check": "biome check src/"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  }
+}
