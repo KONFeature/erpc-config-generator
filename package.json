@@ -1,17 +1,43 @@
 {
   "name": "erpc-config-generator",
-  "module": "index.ts",
+  "description": "Simple typescript tools to generate eRPC yaml config file",
+  "version": "0.0.1",
+  "author": "KONFeature",
+  "maintainers": [
+    {
+      "name": "Quentin Nivelais",
+      "url": "https://twitter.com/QNivelais"
+    }
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "type": "module",
-  "scripts": {
-    "format": "biome check --write src/",
-    "format:check": "biome check src/"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@types/bun": "latest"
+  "files": [
+    "/dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.cjs"
+    }
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "format": "biome check --write src/",
+    "format:check": "biome check src/",
+    "clean": "rimraf dist",
+    "build": "tsup --splitting",
+    "build:watch": "tsup --watch --splitting --format esm"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "tsup": "^8.2.3",
+    "@types/bun": "latest"
   },
   "dependencies": {
     "yaml": "^2.5.0"

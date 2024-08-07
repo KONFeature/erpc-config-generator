@@ -171,6 +171,8 @@ export interface HealthCheckConfig {
     ScoreMetricsWindowSize: string;
 }
 
+export type NetworkArchitecture = string;
+
 export interface NetworkConfig {
     Architecture: NetworkArchitecture;
     RateLimitBudget: string;
