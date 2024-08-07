@@ -3,6 +3,7 @@
  * todo: Tygo (https://github.com/gzuidhof/tygo), doesn't seems to work atm
  *
  * todo: Should have a mapping of of key to yaml types (from the initial config)
+ *  - tygo handle that automatically with yaml flavor (and so outputting the typescript keys as the yaml awaited keys)
  */
 
 export interface Config {

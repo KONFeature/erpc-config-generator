@@ -1,5 +1,6 @@
 packages:
-  - path: "./config.go"
+  - path: "../lib/erpc/common/config.go"
+    flavor: "yaml"
     type_mappings:
       time.Time: "string /* RFC3339 */"
       null.String: "null | string"
