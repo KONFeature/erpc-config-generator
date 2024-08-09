@@ -28,13 +28,8 @@ export function getEvmNetworks<
             ...networks[chain.id],
         };
 
-        // Find the rate limit budget
-        const rateLimitBudget = options?.rateLimitBudget;
-        if (!rateLimitBudget) {
-            throw new Error(
-                `Unable to find rate limit budget for chain ${chain.name}`
-            );
-        }
+        // Get the rate limit budget
+        const rateLimitBudget = options?.rateLimitBudget ?? "";
 
         // Build the network confg
         return {

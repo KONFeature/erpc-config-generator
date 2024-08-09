@@ -23,16 +23,6 @@ import {
 /* -------------------------------------------------------------------------- */
 
 // Build every rate limits
-const networkRateLimits = getRateLimit({
-    id: "network-rate-limit",
-    rules: [
-        {
-            method: "*",
-            maxCount: 10_000,
-            period: "3s",
-        },
-    ],
-});
 const envioRateLimits = getRateLimit({
     id: "envio-rate-limit",
     rules: [
@@ -68,7 +58,7 @@ const networks = getEvmNetworks({
     ],
     generic: {
         // The rate limit rules
-        rateLimitBudget: networkRateLimits.id,
+        rateLimitBudget: "",
         // Some failsafe config
         failsafe: {
             timeout: {
@@ -105,6 +95,7 @@ const ponderProject: ProjectConfig = {
     id: "ponder-rpc",
     networks,
     upstreams,
+    rateLimitBudget: "",
 };
 
 // Build the nexus rpc project
@@ -121,6 +112,7 @@ const nexusProject: ProjectConfig = {
         allowCredentials: true,
         maxAge: 3600,
     },
+    rateLimitBudget: "",
 };
 
 // Build the global config
@@ -147,7 +139,7 @@ const config: Config = {
     },
     projects: [ponderProject, nexusProject],
     rateLimiters: {
-        budgets: [networkRateLimits, envioRateLimits, alchemyRateLimits],
+        budgets: [envioRateLimits, alchemyRateLimits],
     },
 };
 
