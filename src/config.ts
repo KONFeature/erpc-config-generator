@@ -7,13 +7,16 @@ import type { Config } from "./generatedTypes/erpcTypes";
  * @param outputPath
  */
 export function createErpcConfig(config: Config, outputPath = "erpc.yaml") {
-    // todo: Should use a mapping of types key to yaml key from initial go types
-
+    // Stringify the config object
     const yamlStr = stringify(config, {
         lineWidth: -1, // Disable line wrapping
-        sortMapEntries: true,
+        anchorPrefix: "var",
     });
 
-    Bun.write(outputPath, yamlStr);
+    // Add a top level header mentioning it's auto generated
+    const finalString = `# Config generated using: https://github.com/KONFeature/erpc-config-generator \n${yamlStr}`;
+
+    // Write it to the file
+    Bun.write(outputPath, finalString);
     console.log(`Config file written to ${outputPath}`);
 }

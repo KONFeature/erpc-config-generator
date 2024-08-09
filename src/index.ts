@@ -6,4 +6,5 @@ export {
     getEvmUpstream,
 } from "./upstreams";
 export { getEvmNetworks } from "./networks";
+export { getRateLimit } from "./rateLimits";
 export * from "./generatedTypes/erpcTypes";

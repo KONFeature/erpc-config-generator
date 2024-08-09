@@ -52,9 +52,9 @@ const envioUpstream = getEnvioUpstream({
 const networks = getEvmNetworks({
     chains: [arbitrumSepolia, polygonAmoy, optimismSepolia],
     generic: {
-        rateLimitBudget: rateLimitBudget.id
-    }
-})
+        rateLimitBudget: rateLimitBudget.id,
+    },
+});
 
 /* -------------------------------------------------------------------------- */
 /*                            2. Create your config                           */

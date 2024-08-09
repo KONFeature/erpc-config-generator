@@ -1,3 +1,4 @@
+# Config generated using: https://github.com/KONFeature/erpc-config-generator 
 database:
   evmJsonRpcCache:
     driver: postgresql

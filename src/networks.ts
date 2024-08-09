@@ -1,5 +1,5 @@
 import type { Chain } from "viem";
-import type { NetworkConfig } from "../dist";
+import type { NetworkConfig } from "./generatedTypes/erpcTypes";
 
 /**
  * Build a list of networks
