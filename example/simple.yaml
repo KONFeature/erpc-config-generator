@@ -1,53 +1,65 @@
-logLevel: warn
 database:
   evmJsonRpcCache:
     driver: postgresql
     postgresql:
       connectionUri: ${ERPC_DATABASE_URL}
       table: rpc_cache
+logLevel: warn
 projects:
   - id: simple-erpc
     networks:
       - architecture: evm
         evm:
+          blockTrackerInterval: ""
           chainId: 421614
-          finalityDepth: 8
-          blockTrackerInterval: 500ms
+          finalityDepth: 128
         rateLimitBudget: simple-rate-limit
+      - architecture: evm
+        evm:
+          blockTrackerInterval: ""
+          chainId: 80002
+          finalityDepth: 128
+        rateLimitBudget: simple-rate-limit
+      - architecture: evm
+        evm:
+          blockTrackerInterval: ""
+          chainId: 11155420
+          finalityDepth: 128
+        rateLimitBudget: simple-rate-limit
+    rateLimitBudget: simple-rate-limit
     upstreams:
-      - id: alchemy
-        endpoint: evm+alchemy://${ALCHEMY_API_KEY}
-        type: evm+alchemy
-        vendorName: Alchemy
-        ignoreMethods: []
-        allowMethods:
+      - allowMethods:
           - "*"
+        autoIgnoreUnsupportedMethods: true
+        endpoint: evm+alchemy://${ALCHEMY_API_KEY}
         failsafe:
+          retry:
+            backoffFactor: 0.3
+            backoffMaxDelay: 10s
+            delay: 1000ms
+            jitter: 500ms
+            maxAttempts: 2
           timeout:
             duration: 15s
-          retry:
-            maxAttempts: 2
-            delay: 1000ms
-            backoffMaxDelay: 10s
-            backoffFactor: 0.3
-            jitter: 500ms
+        id: alchemy
+        ignoreMethods: []
         rateLimitBudget: simple-rate-limit
+        type: evm+alchemy
+        vendorName: Alchemy
+      - allowMethods:
+          - "*"
         autoIgnoreUnsupportedMethods: true
-      - id: envio
         endpoint: evm+envio://rpc.hypersync.xyz
+        id: envio
+        ignoreMethods: []
+        rateLimitBudget: simple-rate-limit
         type: evm+envio
         vendorName: Envio
-        ignoreMethods: []
-        allowMethods:
-          - "*"
-        rateLimitBudget: simple-rate-limit
-        autoIgnoreUnsupportedMethods: true
-    rateLimitBudget: simple-rate-limit
 rateLimiters:
   budgets:
     - id: simple-rate-limit
       rules:
-        - method: "*"
-          maxCount: 5
+        - maxCount: 5
+          method: "*"
           period: 1s
           waitTime: 0ms

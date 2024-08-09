@@ -25,11 +25,12 @@
     }
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "viem": "^2.19.3"
   },
   "scripts": {
-    "format": "biome check --write src/",
-    "format:check": "biome check src/",
+    "format": "biome check --write .",
+    "format:check": "biome check .",
     "clean": "rimraf dist",
     "build": "tsup --splitting",
     "build:watch": "tsup --watch --splitting --format esm"

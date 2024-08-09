@@ -6,8 +6,7 @@ export default defineConfig({
         "src/index.ts"
     ],
     external: [
-        // todo: Viem as peer dependency? For standard chain + network support?
-        // "viem",
+        "viem",
     ],
     // Format waited
     format: ["cjs", "esm"],

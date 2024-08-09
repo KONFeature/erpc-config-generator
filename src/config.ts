@@ -11,6 +11,7 @@ export function createErpcConfig(config: Config, outputPath = "erpc.yaml") {
 
     const yamlStr = stringify(config, {
         lineWidth: -1, // Disable line wrapping
+        sortMapEntries: true,
     });
 
     Bun.write(outputPath, yamlStr);
