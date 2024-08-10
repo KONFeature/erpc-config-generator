@@ -13,12 +13,12 @@ export type UpstreamOverride = Partial<
 export function getEnvioUpstream({
     id = "envio",
     endpoint = "evm+envio://rpc.hypersync.xyz",
-    rateLimitBudget,
+    rateLimitBudget = "",
     options = {},
 }: {
     id?: string;
     endpoint?: string;
-    rateLimitBudget: string;
+    rateLimitBudget?: string;
     options?: UpstreamOverride;
 }): UpstreamConfig {
     return {
@@ -43,12 +43,12 @@ export function getEnvioUpstream({
 export function getAlchemyUpstream({
     id = "alchemy",
     endpoint,
-    rateLimitBudget,
+    rateLimitBudget = "",
     options = {},
 }: {
     id?: string;
     endpoint: string;
-    rateLimitBudget: string;
+    rateLimitBudget?: string;
     options?: UpstreamOverride;
 }): UpstreamConfig {
     return {
@@ -73,12 +73,12 @@ export function getAlchemyUpstream({
 export function getEvmUpstream({
     id,
     endpoint,
-    rateLimitBudget,
+    rateLimitBudget = "",
     options = {},
 }: {
     id: string;
     endpoint: string;
-    rateLimitBudget: string;
+    rateLimitBudget?: string;
     options?: UpstreamOverride;
 }): UpstreamConfig {
     return {

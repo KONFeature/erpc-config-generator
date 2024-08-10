@@ -1,23 +1,26 @@
-import type {
-    RateLimitBudgetConfig,
-    RateLimitRuleConfig,
-} from "./generatedTypes/erpcTypes";
+import type { PublicRpcSchema, RpcSchema } from "viem";
+import type { RateLimitBudgetConfig } from "./generatedTypes/erpcTypes";
 
-type RuleWithOptionalWaitTime = Omit<RateLimitRuleConfig, "waitTime"> & {
-    waitTime?: string;
-};
+export type RpcMethod<TRpc extends RpcSchema> = TRpc[number]["Method"] | "*";
 
 /**
  * Build a rate limit rule
  */
-export function getRateLimit(
-    args: Omit<RateLimitBudgetConfig, "rules"> & {
-        rules: RuleWithOptionalWaitTime[];
-    }
-): RateLimitBudgetConfig {
+export function getRateLimit<TRpc extends RpcSchema = PublicRpcSchema>({
+    id,
+    rules,
+}: {
+    id: string;
+    rules: {
+        method: RpcMethod<TRpc>;
+        maxCount: number;
+        period: string;
+        waitTime?: string;
+    }[];
+}): RateLimitBudgetConfig {
     return {
-        ...args,
-        rules: args.rules.map((rule) => ({
+        id,
+        rules: rules.map((rule) => ({
             ...rule,
             waitTime: rule.waitTime ?? "",
         })),
