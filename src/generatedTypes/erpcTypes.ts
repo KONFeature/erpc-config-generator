@@ -88,6 +88,16 @@ export interface UpstreamConfig {
   autoIgnoreUnsupportedMethods: boolean;
   failsafe?: FailsafeConfig;
   rateLimitBudget: string;
+  rateLimitAutoTune?: RateLimitAutoTuneConfig;
+}
+export interface RateLimitAutoTuneConfig {
+  enabled: boolean;
+  adjustmentPeriod: string;
+  errorRateThreshold: number /* float64 */;
+  increaseFactor: number /* float64 */;
+  decreaseFactor: number /* float64 */;
+  minBudget: number /* int */;
+  maxBudget: number /* int */;
 }
 export interface JsonRpcUpstreamConfig {
   supportsBatch?: boolean;
@@ -151,8 +161,8 @@ export interface NetworkConfig {
   evm?: EvmNetworkConfig;
 }
 export interface EvmNetworkConfig {
-  chainId: number /* int */;
-  finalityDepth: number /* uint64 */;
+  chainId: number /* int64 */;
+  finalityDepth: number /* int64 */;
   blockTrackerInterval: string;
 }
 export type AuthType = string;
@@ -222,6 +232,7 @@ export type UpstreamType = string;
 export const UpstreamTypeEvm: UpstreamType = "evm";
 export const UpstreamTypeEvmAlchemy: UpstreamType = "evm+alchemy";
 export const UpstreamTypeEvmEnvio: UpstreamType = "evm+envio";
+export const UpstreamTypeEvmPimlico: UpstreamType = "evm+pimlico";
 export type Upstream = any;
 
 //////////

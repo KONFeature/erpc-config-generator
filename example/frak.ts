@@ -15,6 +15,7 @@ import {
     getAlchemyUpstream,
     getEnvioUpstream,
     getEvmNetworks,
+    getPimlicoUpstream,
     getRateLimit,
 } from "../dist";
 
@@ -39,6 +40,16 @@ const alchemyRateLimits = getRateLimit({
         {
             method: "*",
             maxCount: 200,
+            period: "1s",
+        },
+    ],
+});
+const pimlicoRateLimits = getRateLimit({
+    id: "pimlico-rate-limit",
+    rules: [
+        {
+            method: "*",
+            maxCount: 400,
             period: "1s",
         },
     ],
@@ -89,6 +100,10 @@ const upstreams = [
         rateLimitBudget: alchemyRateLimits.id,
     }),
 ];
+const pimlicoUpstream = getPimlicoUpstream({
+    endpoint: `pimlico://${envVariable("PIMLICO_API_KEY")}`,
+    rateLimitBudget: pimlicoRateLimits.id,
+});
 
 // Build the ponder indexing project
 const ponderProject: ProjectConfig = {
@@ -103,7 +118,7 @@ const ponderProject: ProjectConfig = {
 const nexusProject: ProjectConfig = {
     id: "nexus-rpc",
     networks,
-    upstreams,
+    upstreams: [...upstreams, pimlicoUpstream],
     cors: {
         allowedOrigins: ["*"],
         allowedMethods: ["GET", "POST", "OPTIONS"],
@@ -139,7 +154,7 @@ const config: Config = {
     },
     projects: [ponderProject, nexusProject],
     rateLimiters: {
-        budgets: [envioRateLimits, alchemyRateLimits],
+        budgets: [envioRateLimits, alchemyRateLimits, pimlicoRateLimits],
     },
 };
 

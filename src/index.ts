@@ -4,6 +4,7 @@ export {
     getAlchemyUpstream,
     getEnvioUpstream,
     getEvmUpstream,
+    getPimlicoUpstream,
 } from "./upstreams";
 export { getEvmNetworks } from "./networks";
 export { getRateLimit } from "./rateLimits";

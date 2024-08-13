@@ -68,6 +68,36 @@ export function getAlchemyUpstream({
 }
 
 /**
+ * Build a pimlico upstream
+ */
+export function getPimlicoUpstream({
+    id = "pimlico",
+    endpoint = "pimlico://public",
+    rateLimitBudget = "",
+    options = {},
+}: {
+    id?: string;
+    endpoint?: string;
+    rateLimitBudget?: string;
+    options?: UpstreamOverride;
+}): UpstreamConfig {
+    return {
+        // Base stuff
+        id,
+        endpoint,
+        rateLimitBudget,
+        type: "evm+pimlico",
+        // Generic stuff
+        vendorName: "Pimlico",
+        ignoreMethods: [],
+        allowMethods: ["*"],
+        autoIgnoreUnsupportedMethods: true,
+        // Overide options
+        ...options,
+    };
+}
+
+/**
  * Get an evm upstream
  */
 export function getEvmUpstream({
