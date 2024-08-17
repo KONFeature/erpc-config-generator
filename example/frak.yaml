@@ -17,8 +17,7 @@ metrics:
 projects:
   - id: ponder-rpc
     networks: &var2
-      - rateLimitBudget: ""
-        failsafe: &var1
+      - failsafe: &var1
           timeout:
             duration: 30s
           retry:
@@ -31,48 +30,49 @@ projects:
             delay: 1s
             maxCount: 2
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 421614
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 11155420
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 84532
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 137
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 42161
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 10
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: ""
-        failsafe: *var1
+      - failsafe: *var1
         architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 8453
           finalityDepth: 128

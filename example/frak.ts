@@ -10,13 +10,13 @@ import {
 import {
     type Config,
     type ProjectConfig,
-    createErpcConfig,
+    buildAlchemyUpstream,
+    buildEnvioUpstream,
+    buildEvmNetworks,
+    buildPimlicoUpstream,
     envVariable,
-    getAlchemyUpstream,
-    getEnvioUpstream,
-    getEvmNetworks,
-    getPimlicoUpstream,
     getRateLimit,
+    writeErpcConfig,
 } from "../dist";
 
 /* -------------------------------------------------------------------------- */
@@ -57,7 +57,7 @@ const pimlicoRateLimits = getRateLimit({
 
 // Each networks we will use
 // todo: different rate limits for testnet and prod environment
-const networks = getEvmNetworks({
+const networks = buildEvmNetworks({
     chains: [
         arbitrumSepolia,
         optimismSepolia,
@@ -68,8 +68,6 @@ const networks = getEvmNetworks({
         base,
     ],
     generic: {
-        // The rate limit rules
-        rateLimitBudget: "",
         // Some failsafe config
         failsafe: {
             timeout: {
@@ -92,15 +90,15 @@ const networks = getEvmNetworks({
 
 // Build each upstream we will use
 const upstreams = [
-    getEnvioUpstream({
+    buildEnvioUpstream({
         rateLimitBudget: envioRateLimits.id,
     }),
-    getAlchemyUpstream({
+    buildAlchemyUpstream({
         endpoint: `evm+alchemy://${envVariable("ALCHEMY_API_KEY")}`,
         rateLimitBudget: alchemyRateLimits.id,
     }),
 ];
-const pimlicoUpstream = getPimlicoUpstream({
+const pimlicoUpstream = buildPimlicoUpstream({
     endpoint: `pimlico://${envVariable("PIMLICO_API_KEY")}`,
     rateLimitBudget: pimlicoRateLimits.id,
 });
@@ -158,4 +156,4 @@ const config: Config = {
     },
 };
 
-createErpcConfig(config, "example/frak.yaml");
+writeErpcConfig(config, "example/frak.yaml");

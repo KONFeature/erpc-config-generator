@@ -6,7 +6,7 @@ import type { Config } from "./generatedTypes/erpcTypes";
  * @param config
  * @param outputPath
  */
-export function createErpcConfig(config: Config, outputPath = "erpc.yaml") {
+export function writeErpcConfig(config: Config, outputPath = "erpc.yaml") {
     // Stringify the config object
     const yamlStr = stringify(config, {
         lineWidth: -1, // Disable line wrapping

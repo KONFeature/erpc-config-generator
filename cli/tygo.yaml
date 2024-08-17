@@ -1,0 +1,19 @@
+packages:
+  - path: "github.com/erpc/erpc/common"
+    flavor: "yaml"
+    # Output path for generated types
+    output_path: "dist/erpcTypes.ts"
+    # Type mapping rly needed?
+    type_mappings:
+      time.Time: "string /* RFC3339 */"
+      null.String: "null | string"
+      null.Bool: "null | boolean"
+      uuid.UUID: "string /* uuid */"
+      uuid.NullUUID: "null | string /* uuid */"
+    # Exclude some not needed files
+    exclude_files:
+      - "util.go"
+      - "config_test.go"
+      - "errors.go"
+      - "request.go"
+      - "json_rpc.go"

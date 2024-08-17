@@ -2,7 +2,7 @@
     "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
         "ignore": ["src/generatedTypes/**"],
-        "include": ["example/**", "src/**"]
+        "include": ["example/**", "src/**", "cli/**"]
     },
     "organizeImports": {
         "enabled": true

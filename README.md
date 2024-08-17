@@ -31,7 +31,7 @@ This example demonstrates:
 
 1. How to create individual components like rate limit budgets, upstreams, and network configurations
 2. How to combine these components into a complete eRPC configuration
-3. How to use the `createErpcConfig` function to output the configuration as a YAML file
+3. How to use the `writeErpcConfig` function to output the configuration as a YAML file
 
 You can use this example as a starting point for creating your own eRPC configurations.
 

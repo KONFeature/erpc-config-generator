@@ -33,7 +33,8 @@
     "format:check": "biome check .",
     "clean": "rimraf dist",
     "build": "tsup --splitting",
-    "build:watch": "tsup --watch --splitting --format esm"
+    "build:watch": "tsup --watch --splitting --format esm",
+    "update-erpc-types": "bun run cli/generate-types.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",

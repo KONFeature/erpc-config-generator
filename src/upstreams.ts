@@ -10,7 +10,7 @@ export type UpstreamOverride = Partial<
 /**
  * Build an envio upstream
  */
-export function getEnvioUpstream({
+export function buildEnvioUpstream({
     id = "envio",
     endpoint = "evm+envio://rpc.hypersync.xyz",
     rateLimitBudget = "",
@@ -40,7 +40,7 @@ export function getEnvioUpstream({
 /**
  * Build an alchemy upstream
  */
-export function getAlchemyUpstream({
+export function buildAlchemyUpstream({
     id = "alchemy",
     endpoint,
     rateLimitBudget = "",
@@ -70,7 +70,7 @@ export function getAlchemyUpstream({
 /**
  * Build a pimlico upstream
  */
-export function getPimlicoUpstream({
+export function buildPimlicoUpstream({
     id = "pimlico",
     endpoint = "pimlico://public",
     rateLimitBudget = "",
@@ -100,7 +100,7 @@ export function getPimlicoUpstream({
 /**
  * Get an evm upstream
  */
-export function getEvmUpstream({
+export function buildEvmUpstream({
     id,
     endpoint,
     rateLimitBudget = "",

@@ -1,11 +1,11 @@
-export { createErpcConfig } from "./config";
+export { writeErpcConfig } from "./config";
 export { envVariable } from "./env";
 export {
-    getAlchemyUpstream,
-    getEnvioUpstream,
-    getEvmUpstream,
-    getPimlicoUpstream,
+    buildAlchemyUpstream,
+    buildEnvioUpstream,
+    buildEvmUpstream,
+    buildPimlicoUpstream,
 } from "./upstreams";
-export { getEvmNetworks } from "./networks";
+export { buildEvmNetworks } from "./networks";
 export { getRateLimit } from "./rateLimits";
 export * from "./generatedTypes/erpcTypes";

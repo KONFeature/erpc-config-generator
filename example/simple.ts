@@ -3,11 +3,11 @@ import {
     type Config,
     type NetworkConfig,
     type RateLimitBudgetConfig,
-    createErpcConfig,
+    buildAlchemyUpstream,
+    buildEnvioUpstream,
+    buildEvmNetworks,
     envVariable,
-    getAlchemyUpstream,
-    getEnvioUpstream,
-    getEvmNetworks,
+    writeErpcConfig,
 } from "../src";
 
 /* -------------------------------------------------------------------------- */
@@ -26,7 +26,7 @@ const rateLimitBudget: RateLimitBudgetConfig = {
     ],
 };
 
-const alchemyUpstream = getAlchemyUpstream({
+const alchemyUpstream = buildAlchemyUpstream({
     endpoint: `evm+alchemy://${envVariable("ALCHEMY_API_KEY")}`,
     rateLimitBudget: rateLimitBudget.id,
     options: {
@@ -45,11 +45,11 @@ const alchemyUpstream = getAlchemyUpstream({
     },
 });
 
-const envioUpstream = getEnvioUpstream({
+const envioUpstream = buildEnvioUpstream({
     rateLimitBudget: rateLimitBudget.id,
 });
 
-const networks = getEvmNetworks({
+const networks = buildEvmNetworks({
     chains: [arbitrumSepolia, polygonAmoy, optimismSepolia],
     generic: {
         rateLimitBudget: rateLimitBudget.id,
@@ -88,4 +88,4 @@ const config: Config = {
 /*                            3. Write your config                            */
 /* -------------------------------------------------------------------------- */
 
-createErpcConfig(config, "example/simple.yaml");
+writeErpcConfig(config, "example/simple.yaml");

@@ -7,7 +7,7 @@ import type { NetworkConfig } from "./generatedTypes/erpcTypes";
  * @param `generic` Some generic config for each network
  * @param `networks` Some per network specific config (ie custom rate limit budget or stuff like that)
  */
-export function getEvmNetworks<
+export function buildEvmNetworks<
     TChains extends readonly [Chain, ...Chain[]] = readonly [Chain, ...Chain[]],
 >({
     chains,
