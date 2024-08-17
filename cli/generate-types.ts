@@ -1,4 +1,4 @@
-import { readdir, rm } from 'node:fs/promises'
+import { readdir, rm } from "node:fs/promises";
 
 /**
  * Method used to generate fresh erpc types from the main branch of the erpc repo
@@ -8,19 +8,23 @@ async function generateErpcTypes() {
 
     // Check if a file or folder exist
     // from: https://stackoverflow.com/a/77992699
-    const fExist = (path: string) => !! Array.from(
-        new Bun.Glob(path).scanSync({ onlyFiles: false })
-      )[0]
+    const fExist = (path: string) =>
+        !!Array.from(new Bun.Glob(path).scanSync({ onlyFiles: false }))[0];
 
     // Check if the tmp folder already exist, if yes remove it
     if (await fExist("./tmp")) {
         console.log(" - Removing existing tmp folder");
-        await rm('./tmp', { recursive: true, force: true })
+        await rm("./tmp", { recursive: true, force: true });
     }
 
     // Clone the erpc repo in a ./tmp folder (https://github.com/erpc/erpc.git)
     console.log(" - Cloning erpc repo");
-    const cloneProcess = Bun.spawn(["git", "clone", "https://github.com/erpc/erpc.git", "./tmp"]);
+    const cloneProcess = Bun.spawn([
+        "git",
+        "clone",
+        "https://github.com/erpc/erpc.git",
+        "./tmp",
+    ]);
     await cloneProcess.exited;
     if (cloneProcess.exitCode !== 0) {
         console.error("Failed to clone the erpc repo");
@@ -47,11 +51,11 @@ async function generateErpcTypes() {
     console.log(" - Copying generated types");
     const generatedTypes = Bun.file("./tmp/dist/erpcTypes.ts");
     await Bun.write("./src/generatedTypes/erpcTypes.ts", generatedTypes);
-    
+
     // Remove the tmp folder
     console.log(" - Removing tmp folder");
-    await rm('./tmp', { recursive: true, force: true })
-    
+    await rm("./tmp", { recursive: true, force: true });
+
     console.log("Erpc types updated!");
 }
 

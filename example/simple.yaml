@@ -1,4 +1,4 @@
-# Config generated using: https://github.com/KONFeature/erpc-config-generator 
+# Config generated using: https://github.com/KONFeature/erpc-config-generator
 logLevel: warn
 database:
   evmJsonRpcCache:
@@ -7,22 +7,23 @@ database:
       connectionUri: ${ERPC_DATABASE_URL}
       table: rpc_cache
 projects:
-  - id: simple-erpc
+  - rateLimitBudget: ""
+    id: simple-erpc
     networks:
-      - rateLimitBudget: simple-rate-limit
-        architecture: evm
+      - architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 421614
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: simple-rate-limit
-        architecture: evm
+      - architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 80002
           finalityDepth: 128
           blockTrackerInterval: ""
-      - rateLimitBudget: simple-rate-limit
-        architecture: evm
+      - architecture: evm
+        rateLimitBudget: ""
         evm:
           chainId: 11155420
           finalityDepth: 128
@@ -30,37 +31,29 @@ projects:
     upstreams:
       - id: alchemy
         endpoint: evm+alchemy://${ALCHEMY_API_KEY}
-        rateLimitBudget: simple-rate-limit
         type: evm+alchemy
+        rateLimitBudget: ""
         vendorName: Alchemy
         ignoreMethods: []
         allowMethods:
           - "*"
         autoIgnoreUnsupportedMethods: true
-        failsafe:
-          timeout:
-            duration: 15s
-          retry:
-            maxAttempts: 2
-            delay: 1000ms
-            backoffMaxDelay: 10s
-            backoffFactor: 0.3
-            jitter: 500ms
+        options:
+          failsafe:
+            timeout:
+              duration: 15s
+            retry:
+              maxAttempts: 2
+              delay: 1000ms
+              backoffMaxDelay: 10s
+              backoffFactor: 0.3
+              jitter: 500ms
       - id: envio
         endpoint: evm+envio://rpc.hypersync.xyz
-        rateLimitBudget: simple-rate-limit
+        rateLimitBudget: ""
         type: evm+envio
         vendorName: Envio
         ignoreMethods: []
         allowMethods:
           - "*"
         autoIgnoreUnsupportedMethods: true
-    rateLimitBudget: simple-rate-limit
-rateLimiters:
-  budgets:
-    - id: simple-rate-limit
-      rules:
-        - method: "*"
-          maxCount: 5
-          period: 1s
-          waitTime: 0ms

@@ -1,4 +1,4 @@
-# Config generated using: https://github.com/KONFeature/erpc-config-generator 
+# Config generated using: https://github.com/KONFeature/erpc-config-generator
 logLevel: ${ERPC_LOG_LEVEL}
 database:
   evmJsonRpcCache:
@@ -15,8 +15,9 @@ metrics:
   host: 0.0.0.0
   port: 4001
 projects:
-  - id: ponder-rpc
-    networks: &var2
+  - rateLimitBudget: ""
+    id: ponder-rpc
+    networks: &var3
       - failsafe: &var1
           timeout:
             duration: 30s
@@ -29,27 +30,6 @@ projects:
           hedge:
             delay: 1s
             maxCount: 2
-        architecture: evm
-        rateLimitBudget: ""
-        evm:
-          chainId: 421614
-          finalityDepth: 128
-          blockTrackerInterval: ""
-      - failsafe: *var1
-        architecture: evm
-        rateLimitBudget: ""
-        evm:
-          chainId: 11155420
-          finalityDepth: 128
-          blockTrackerInterval: ""
-      - failsafe: *var1
-        architecture: evm
-        rateLimitBudget: ""
-        evm:
-          chainId: 84532
-          finalityDepth: 128
-          blockTrackerInterval: ""
-      - failsafe: *var1
         architecture: evm
         rateLimitBudget: ""
         evm:
@@ -77,8 +57,37 @@ projects:
           chainId: 8453
           finalityDepth: 128
           blockTrackerInterval: ""
+      - failsafe: &var2
+          timeout:
+            duration: 60s
+          retry:
+            maxAttempts: 3
+            delay: 1s
+            backoffMaxDelay: 20s
+            backoffFactor: 0.5
+            jitter: 500ms
+        evm:
+          chainId: 421614
+          finalityDepth: 64
+          blockTrackerInterval: ""
+        architecture: evm
+        rateLimitBudget: ""
+      - failsafe: *var2
+        evm:
+          chainId: 11155420
+          finalityDepth: 64
+          blockTrackerInterval: ""
+        architecture: evm
+        rateLimitBudget: ""
+      - failsafe: *var2
+        evm:
+          chainId: 84532
+          finalityDepth: 64
+          blockTrackerInterval: ""
+        architecture: evm
+        rateLimitBudget: ""
     upstreams:
-      - &var3
+      - &var4
         id: envio
         endpoint: evm+envio://rpc.hypersync.xyz
         rateLimitBudget: envio-rate-limit
@@ -88,22 +97,22 @@ projects:
         allowMethods:
           - "*"
         autoIgnoreUnsupportedMethods: true
-      - &var4
+      - &var5
         id: alchemy
         endpoint: evm+alchemy://${ALCHEMY_API_KEY}
-        rateLimitBudget: alchemy-rate-limit
         type: evm+alchemy
+        rateLimitBudget: alchemy-rate-limit
         vendorName: Alchemy
         ignoreMethods: []
         allowMethods:
           - "*"
         autoIgnoreUnsupportedMethods: true
-    rateLimitBudget: ""
-  - id: nexus-rpc
-    networks: *var2
+  - rateLimitBudget: ""
+    id: nexus-rpc
+    networks: *var3
     upstreams:
-      - *var3
       - *var4
+      - *var5
       - id: pimlico
         endpoint: pimlico://${PIMLICO_API_KEY}
         rateLimitBudget: pimlico-rate-limit
@@ -127,7 +136,6 @@ projects:
         - X-Request-ID
       allowCredentials: true
       maxAge: 3600
-    rateLimitBudget: ""
 rateLimiters:
   budgets:
     - id: envio-rate-limit

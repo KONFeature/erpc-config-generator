@@ -1,11 +1,11 @@
 import { arbitrumSepolia, optimismSepolia, polygonAmoy } from "viem/chains";
 import {
     type Config,
-    type NetworkConfig,
     type RateLimitBudgetConfig,
     buildAlchemyUpstream,
     buildEnvioUpstream,
     buildEvmNetworks,
+    buildProject,
     envVariable,
     writeErpcConfig,
 } from "../src";
@@ -14,21 +14,8 @@ import {
 /*              1. Create everything you will need in your config             */
 /* -------------------------------------------------------------------------- */
 
-const rateLimitBudget: RateLimitBudgetConfig = {
-    id: "simple-rate-limit",
-    rules: [
-        {
-            method: "*",
-            maxCount: 5,
-            period: "1s",
-            waitTime: "0ms",
-        },
-    ],
-};
-
 const alchemyUpstream = buildAlchemyUpstream({
     endpoint: `evm+alchemy://${envVariable("ALCHEMY_API_KEY")}`,
-    rateLimitBudget: rateLimitBudget.id,
     options: {
         failsafe: {
             timeout: {
@@ -45,15 +32,10 @@ const alchemyUpstream = buildAlchemyUpstream({
     },
 });
 
-const envioUpstream = buildEnvioUpstream({
-    rateLimitBudget: rateLimitBudget.id,
-});
+const envioUpstream = buildEnvioUpstream();
 
 const networks = buildEvmNetworks({
     chains: [arbitrumSepolia, polygonAmoy, optimismSepolia],
-    generic: {
-        rateLimitBudget: rateLimitBudget.id,
-    },
 });
 
 /* -------------------------------------------------------------------------- */
@@ -72,16 +54,12 @@ const config: Config = {
         },
     },
     projects: [
-        {
+        buildProject({
             id: "simple-erpc",
             networks,
             upstreams: [alchemyUpstream, envioUpstream],
-            rateLimitBudget: rateLimitBudget.id,
-        },
+        }),
     ],
-    rateLimiters: {
-        budgets: [rateLimitBudget],
-    },
 };
 
 /* -------------------------------------------------------------------------- */

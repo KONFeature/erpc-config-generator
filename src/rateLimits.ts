@@ -1,11 +1,13 @@
-import type { PublicRpcSchema, RpcSchema } from "viem";
+import type { EIP1474Methods, RpcSchema } from "viem";
 import type {
     RateLimitBudgetConfig,
     RateLimitRuleConfig,
 } from "./generatedTypes/erpcTypes";
+import type { RpcMethod } from "./types/rpc";
 
-export type RpcMethod<TRpc extends RpcSchema> = TRpc[number]["Method"] | "*";
-
+/**
+ * Rate limit rule types
+ */
 type RateLimitRule<TRpc extends RpcSchema> = Omit<
     RateLimitRuleConfig,
     "waitTime" | "method"
@@ -17,12 +19,13 @@ type RateLimitRule<TRpc extends RpcSchema> = Omit<
 /**
  * Build a rate limit rule
  */
-export function getRateLimit<TRpc extends RpcSchema = PublicRpcSchema>({
+export function buildRateLimit<TRpc extends RpcSchema = EIP1474Methods>({
     id,
     rules,
 }: {
     id: string;
     rules: RateLimitRule<TRpc>[];
+    rpcSchema?: TRpc;
 }): RateLimitBudgetConfig {
     return {
         id,

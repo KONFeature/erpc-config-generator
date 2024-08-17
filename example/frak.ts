@@ -1,3 +1,4 @@
+import { type PublicRpcSchema, rpcSchema } from "viem";
 import {
     arbitrum,
     arbitrumSepolia,
@@ -14,8 +15,9 @@ import {
     buildEnvioUpstream,
     buildEvmNetworks,
     buildPimlicoUpstream,
+    buildProject,
+    buildRateLimit,
     envVariable,
-    getRateLimit,
     writeErpcConfig,
 } from "../dist";
 
@@ -24,7 +26,7 @@ import {
 /* -------------------------------------------------------------------------- */
 
 // Build every rate limits
-const envioRateLimits = getRateLimit({
+const envioRateLimits = buildRateLimit({
     id: "envio-rate-limit",
     rules: [
         {
@@ -34,7 +36,7 @@ const envioRateLimits = getRateLimit({
         },
     ],
 });
-const alchemyRateLimits = getRateLimit({
+const alchemyRateLimits = buildRateLimit({
     id: "alchemy-rate-limit",
     rules: [
         {
@@ -44,7 +46,7 @@ const alchemyRateLimits = getRateLimit({
         },
     ],
 });
-const pimlicoRateLimits = getRateLimit({
+const pimlicoRateLimits = buildRateLimit({
     id: "pimlico-rate-limit",
     rules: [
         {
@@ -57,16 +59,8 @@ const pimlicoRateLimits = getRateLimit({
 
 // Each networks we will use
 // todo: different rate limits for testnet and prod environment
-const networks = buildEvmNetworks({
-    chains: [
-        arbitrumSepolia,
-        optimismSepolia,
-        baseSepolia,
-        polygon,
-        arbitrum,
-        optimism,
-        base,
-    ],
+const mainnetNetworks = buildEvmNetworks({
+    chains: [polygon, arbitrum, optimism, base],
     generic: {
         // Some failsafe config
         failsafe: {
@@ -87,6 +81,29 @@ const networks = buildEvmNetworks({
         },
     },
 });
+const testnetNetworks = buildEvmNetworks({
+    chains: [arbitrumSepolia, optimismSepolia, baseSepolia],
+    generic: {
+        // Some failsafe config
+        failsafe: {
+            timeout: {
+                duration: "60s",
+            },
+            retry: {
+                maxAttempts: 3,
+                delay: "1s",
+                backoffMaxDelay: "20s",
+                backoffFactor: 0.5,
+                jitter: "500ms",
+            },
+        },
+        // Overide finality depth
+        evm: {
+            finalityDepth: 64,
+        },
+    },
+});
+const networks = [...mainnetNetworks, ...testnetNetworks];
 
 // Build each upstream we will use
 const upstreams = [
@@ -104,16 +121,15 @@ const pimlicoUpstream = buildPimlicoUpstream({
 });
 
 // Build the ponder indexing project
-const ponderProject: ProjectConfig = {
+const ponderProject: ProjectConfig = buildProject({
     id: "ponder-rpc",
     networks,
     upstreams,
-    rateLimitBudget: "",
-};
+});
 
 // Build the nexus rpc project
 // todo: add authentication + more restrictie cors origin
-const nexusProject: ProjectConfig = {
+const nexusProject: ProjectConfig = buildProject({
     id: "nexus-rpc",
     networks,
     upstreams: [...upstreams, pimlicoUpstream],
@@ -125,8 +141,7 @@ const nexusProject: ProjectConfig = {
         allowCredentials: true,
         maxAge: 3600,
     },
-    rateLimitBudget: "",
-};
+});
 
 // Build the global config
 const config: Config = {

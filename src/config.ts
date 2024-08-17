@@ -1,6 +1,10 @@
 import { stringify } from "yaml";
 import type { Config } from "./generatedTypes/erpcTypes";
 
+/// Header for the generate file
+const header =
+    "# Config generated using: https://github.com/KONFeature/erpc-config-generator";
+
 /**
  * Create an erpc config
  * @param config
@@ -14,7 +18,7 @@ export function writeErpcConfig(config: Config, outputPath = "erpc.yaml") {
     });
 
     // Add a top level header mentioning it's auto generated
-    const finalString = `# Config generated using: https://github.com/KONFeature/erpc-config-generator \n${yamlStr}`;
+    const finalString = `${header}\n${yamlStr}`;
 
     // Write it to the file
     Bun.write(outputPath, finalString);

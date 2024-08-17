@@ -1,10 +1,24 @@
+import type {
+    BundlerRpcSchema,
+    PublicRpcSchema,
+    RpcSchema,
+    WalletRpcSchema,
+} from "viem";
 import type { UpstreamConfig } from "./generatedTypes/erpcTypes";
+import type { RpcMethod } from "./types/rpc";
+import type { OptionalRateLimit } from "./types/utils";
 
 /**
  * Generic type to overide network config
  */
-export type UpstreamOverride = Partial<
-    Omit<UpstreamConfig, "id" | "endpoint" | "type" | "rateLimitBudget">
+export type UpstreamOverride<TRpc extends RpcSchema> = Partial<
+    Omit<
+        OptionalRateLimit<UpstreamConfig>,
+        "id" | "endpoint" | "type" | "ignoreMethods" | "allowMethods"
+    > & {
+        ignoreMethods?: RpcMethod<TRpc>[];
+        allowMethods?: RpcMethod<TRpc>[];
+    }
 >;
 
 /**
@@ -13,19 +27,16 @@ export type UpstreamOverride = Partial<
 export function buildEnvioUpstream({
     id = "envio",
     endpoint = "evm+envio://rpc.hypersync.xyz",
-    rateLimitBudget = "",
-    options = {},
+    ...options
 }: {
     id?: string;
     endpoint?: string;
-    rateLimitBudget?: string;
-    options?: UpstreamOverride;
-}): UpstreamConfig {
+} & UpstreamOverride<PublicRpcSchema> = {}): UpstreamConfig {
     return {
         // Base stuff
         id,
         endpoint,
-        rateLimitBudget,
+        rateLimitBudget: options.rateLimitBudget ?? "",
         type: "evm+envio",
         // Generic stuff
         vendorName: "Envio",
@@ -43,20 +54,19 @@ export function buildEnvioUpstream({
 export function buildAlchemyUpstream({
     id = "alchemy",
     endpoint,
-    rateLimitBudget = "",
-    options = {},
+    ...options
 }: {
     id?: string;
     endpoint: string;
-    rateLimitBudget?: string;
-    options?: UpstreamOverride;
-}): UpstreamConfig {
+} & UpstreamOverride<
+    [...PublicRpcSchema, ...WalletRpcSchema]
+>): UpstreamConfig {
     return {
         // Base stuff
         id,
         endpoint,
-        rateLimitBudget,
         type: "evm+alchemy",
+        rateLimitBudget: options.rateLimitBudget ?? "",
         // Generic stuff
         vendorName: "Alchemy",
         ignoreMethods: [],
@@ -69,23 +79,21 @@ export function buildAlchemyUpstream({
 
 /**
  * Build a pimlico upstream
+ * todo: Should include paymaster rpc schema when available
  */
 export function buildPimlicoUpstream({
     id = "pimlico",
     endpoint = "pimlico://public",
-    rateLimitBudget = "",
-    options = {},
+    ...options
 }: {
     id?: string;
     endpoint?: string;
-    rateLimitBudget?: string;
-    options?: UpstreamOverride;
-}): UpstreamConfig {
+} & UpstreamOverride<BundlerRpcSchema>): UpstreamConfig {
     return {
         // Base stuff
         id,
         endpoint,
-        rateLimitBudget,
+        rateLimitBudget: options.rateLimitBudget ?? "",
         type: "evm+pimlico",
         // Generic stuff
         vendorName: "Pimlico",
@@ -100,22 +108,20 @@ export function buildPimlicoUpstream({
 /**
  * Get an evm upstream
  */
-export function buildEvmUpstream({
+export function buildEvmUpstream<TRpc extends RpcSchema = PublicRpcSchema>({
     id,
     endpoint,
-    rateLimitBudget = "",
-    options = {},
+    ...options
 }: {
     id: string;
     endpoint: string;
-    rateLimitBudget?: string;
-    options?: UpstreamOverride;
-}): UpstreamConfig {
+    rpcSchema?: TRpc;
+} & UpstreamOverride<TRpc>): UpstreamConfig {
     return {
         // Base stuff
         id,
         endpoint,
-        rateLimitBudget,
+        rateLimitBudget: options.rateLimitBudget ?? "",
         type: "evm",
         // Generic stuff
         vendorName: "Generic Evm",

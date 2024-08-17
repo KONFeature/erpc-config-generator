@@ -7,5 +7,6 @@ export {
     buildPimlicoUpstream,
 } from "./upstreams";
 export { buildEvmNetworks } from "./networks";
-export { getRateLimit } from "./rateLimits";
+export { buildRateLimit } from "./rateLimits";
+export { buildProject } from "./project";
 export * from "./generatedTypes/erpcTypes";
