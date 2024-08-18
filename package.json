@@ -1,7 +1,7 @@
 {
   "name": "@konfeature/erpc-config-generator",
   "description": "Simple typescript tools to generate eRPC yaml config file",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "KONFeature",
   "maintainers": [
     {
@@ -13,15 +13,22 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
-  "type": "module",
   "files": [
     "/dist"
   ],
+  "bin": {
+    "erpc-config": "bin/erpc-config"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.cjs"
+    },
+    "./cli": {
+      "types": "./dist/cli/cli.d.ts",
+      "import": "./dist/cli/cli.js",
+      "default": "./dist/cli/cli.cjs"
     }
   },
   "peerDependencies": {
@@ -36,7 +43,7 @@
     "build:watch": "tsup --watch --splitting --format esm",
     "update:erpc-types": "bun run cli/generate-types.ts",
     "update:deps": "npm-check-updates -ui",
-    "example": "bun run example/simple.ts && bun run example/frak.ts",
+    "example": "bun run src/cli/index.ts --config ./example/simple.ts --out ./example/simple.yaml",
     "changeset:release": "bun run build && changeset publish",
     "changeset:version": "changeset version && bun install --lockfile-only"
   },
@@ -50,6 +57,7 @@
     "tsup": "^8.2.4"
   },
   "dependencies": {
+    "gluegun": "^5.2.0",
     "yaml": "^2.5.0"
   }
 }

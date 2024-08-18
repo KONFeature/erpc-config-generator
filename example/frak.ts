@@ -205,4 +205,7 @@ const config: Config = {
     },
 };
 
-writeErpcConfig({ config, outputPath: "example/frak.yaml" });
+/**
+ * Export the config
+ */
+export default config;

@@ -66,4 +66,4 @@ const config: Config = {
 /*                            3. Write your config                            */
 /* -------------------------------------------------------------------------- */
 
-writeErpcConfig({ config, outputPath: "example/simple.yaml" });
+export default config;

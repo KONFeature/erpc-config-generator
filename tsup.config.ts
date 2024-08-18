@@ -3,11 +3,10 @@ import { defineConfig } from "tsup";
 export default defineConfig({
     // All of our entry-points
     entry: [
-        "src/index.ts"
+        "src/index.ts",
+        "src/cli/index.ts",
     ],
-    external: [
-        "viem",
-    ],
+    external: ["viem"],
     // Format waited
     format: ["cjs", "esm"],
     // Code splitting and stuff

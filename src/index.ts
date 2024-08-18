@@ -1,4 +1,3 @@
-export { writeErpcConfig } from "./config";
 export { envVariable } from "./env";
 export {
     buildAlchemyUpstream,

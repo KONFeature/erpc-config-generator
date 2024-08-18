@@ -12,80 +12,63 @@ This project is currently under active development. Features and API may change.
 - [x] Write YAML config file for eRPC config
 - [x] Helpers for networks, upstream, and auth configurations
 - [x] Support for various blockchain networks and RPC providers
+- [ ] More stuff within the CLI (config validity check, docker file generation, version specification etc)
 - [ ] Cleaner rate limit configuration and auto completion
 - [ ] Builder pattern with chaining (like `createProject(...).addRateLimits(...)/* a few more steps */.write(...)`)
 
 ## Installation
 
 ```bash
-bun add @konfeature/erpc-config-builder
+bun add @konfeature/erpc-config-generator
 ```
 
 ## Usage
 
-Here's a basic overview of how to use the eRPC Config Builder:
+1. Create a TypeScript file (e.g., `erpc-config.ts`) that exports a full `Config` object as default:
 
 ```typescript
-import {
-  writeErpcConfig,
-  buildEvmNetworks,
-  buildRateLimit,
-  buildAlchemyUpstream,
-  buildProject,
-  envVariable,
-  type Config
-} from '@konfeature/erpc-config-builder';
+import { Config, buildEvmNetworks, buildRateLimit, buildAlchemyUpstream, buildProject, envVariable } from '@konfeature/erpc-config-generator';
 
-// Build rate limits
-const rateLimits = buildRateLimit({
-  id: "alchemy-rate-limit",
-  rules: [{ method: "*", maxCount: 200, period: "1s" }],
-});
+// ... (configuration setup)
 
-// Build networks
-const networks = buildEvmNetworks({
-  chains: [arbitrum, optimism],
-  generic: {
-    // Generic network configuration
-  },
-  networks: {
-    // Specific network configurations
-  }
-});
-
-// Build upstreams
-const upstreams = [
-  buildAlchemyUpstream({
-    apiKey: envVariable("ALCHEMY_API_KEY"),
-    rateLimitBudget: rateLimits.id,
-  }),
-];
-
-// Build projects
-const project = buildProject({
-  id: "my-project",
-  networks,
-  upstreams,
-  // Other project configuration
-});
-
-// Create main config
 const config: Config = {
-  logLevel: envVariable("ERPC_LOG_LEVEL"),
-  projects: [project],
-  rateLimiters: { budgets: [rateLimits] },
-  // Other configuration options
+  // Your eRPC configuration
 };
 
-// Write config to YAML file
-writeErpcConfig({ config, outputPath: "erpc-config.yaml" });
+export default config;
+```
+
+2. Run the CLI command to generate the YAML configuration:
+
+```bash
+bunx erpc-config
+```
+
+This will read the `erpc-config.ts` file in the current directory and output the configuration to `erpc.yaml`.
+
+## CLI Usage
+
+The `erpc-config` command supports the following options:
+
+```
+erpc-config [options]
+
+Options:
+  --config    The path to the config file (default: "./erpc-config.ts")
+  --out       The output file path (default: "./erpc.yaml")
+```
+
+Examples:
+
+```bash
+# Use default paths
+npx erpc-config
+
+# Specify custom input and output paths
+npx erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-config.yaml
 ```
 
 ## API Overview
-
-### Config Writing
-
-- `writeErpcConfig({ config, outputPath })`: Write the complete eRPC configuration to a YAML file.
 
 ### Environment Variables
 

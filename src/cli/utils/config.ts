@@ -1,5 +1,5 @@
 import { stringify } from "yaml";
-import type { Config } from "./generatedTypes/erpcTypes";
+import type { Config } from "../../generatedTypes/erpcTypes";
 
 /// Header for the generate file
 const header =
@@ -25,5 +25,4 @@ export function writeErpcConfig({
 
     // Write it to the file
     Bun.write(outputPath, finalString);
-    console.log(`Config file written to ${outputPath}`);
 }
