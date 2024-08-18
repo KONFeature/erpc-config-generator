@@ -13,11 +13,13 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
+  "type": "module",
   "files": [
-    "/dist"
+    "/dist",
+    "src/**/*.ts"
   ],
   "bin": {
-    "erpc-config": "bin/erpc-config"
+    "erpc-config": "bin/cli/cli.cjs"
   },
   "exports": {
     ".": {
