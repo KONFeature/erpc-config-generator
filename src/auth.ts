@@ -10,11 +10,11 @@ import {
     type SecretStrategyConfig,
     type SiweStrategyConfig,
 } from "./generatedTypes/erpcTypes";
-import type { RpcMethod } from "./types/rpc";
+import type { RpcMethodWithRegex } from "./types/rpc";
 
 type AuthStrategyBaseConfig<TRpc extends RpcSchema> = {
-    allowMethods?: RpcMethod<TRpc>[];
-    ignoreMethods?: RpcMethod<TRpc>[];
+    allowMethods?: RpcMethodWithRegex<TRpc>[];
+    ignoreMethods?: RpcMethodWithRegex<TRpc>[];
     rateLimitBudget?: string;
 };
 

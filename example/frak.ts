@@ -22,7 +22,7 @@ import {
     envVariable,
     writeErpcConfig,
 } from "../dist";
-import type { RpcMethod } from "../src/types/rpc";
+import type { RpcMethodWithRegex } from "../dist";
 
 /* -------------------------------------------------------------------------- */
 /*                  Config generator for the Frak eRPC config                 */
@@ -107,7 +107,7 @@ const testnetNetworks = buildEvmNetworks({
 });
 const networks = [...mainnetNetworks, ...testnetNetworks];
 
-const pimlicoSpecificMethods: RpcMethod<EIP1474Methods>[] = [
+const pimlicoSpecificMethods: RpcMethodWithRegex<EIP1474Methods>[] = [
     ...bundlersMethods,
     "pm_*",
     "pimlico_*",
@@ -205,4 +205,4 @@ const config: Config = {
     },
 };
 
-writeErpcConfig(config, "example/frak.yaml");
+writeErpcConfig({ config, outputPath: "example/frak.yaml" });

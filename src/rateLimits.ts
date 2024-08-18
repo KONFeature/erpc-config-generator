@@ -3,7 +3,7 @@ import type {
     RateLimitBudgetConfig,
     RateLimitRuleConfig,
 } from "./generatedTypes/erpcTypes";
-import type { RpcMethod } from "./types/rpc";
+import type { RpcMethodWithRegex } from "./types/rpc";
 
 /**
  * Rate limit rule types
@@ -12,7 +12,7 @@ type RateLimitRule<TRpc extends RpcSchema> = Omit<
     RateLimitRuleConfig,
     "waitTime" | "method"
 > & {
-    method: RpcMethod<TRpc>;
+    method: RpcMethodWithRegex<TRpc>;
     waitTime?: string;
 };
 

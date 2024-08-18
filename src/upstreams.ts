@@ -5,7 +5,7 @@ import type {
     WalletRpcSchema,
 } from "viem";
 import type { UpstreamConfig } from "./generatedTypes/erpcTypes";
-import type { RpcMethod } from "./types/rpc";
+import type { RpcMethodWithRegex } from "./types/rpc";
 import type { OptionalRateLimit } from "./types/utils";
 
 /**
@@ -16,8 +16,8 @@ export type UpstreamOverride<TRpc extends RpcSchema> = Partial<
         OptionalRateLimit<UpstreamConfig>,
         "id" | "endpoint" | "type" | "ignoreMethods" | "allowMethods"
     > & {
-        ignoreMethods?: RpcMethod<TRpc>[];
-        allowMethods?: RpcMethod<TRpc>[];
+        ignoreMethods?: RpcMethodWithRegex<TRpc>[];
+        allowMethods?: RpcMethodWithRegex<TRpc>[];
     }
 >;
 

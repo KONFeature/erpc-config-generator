@@ -17,3 +17,4 @@ export {
 } from "./auth";
 export * from "./generatedTypes/erpcTypes";
 export { bundlersMethods } from "./types/rpc";
+export type { RpcMethodWithRegex, RpcMethodSplitted } from "./types/rpc";

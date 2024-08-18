@@ -1,7 +1,7 @@
 {
-  "name": "erpc-config-generator",
+  "name": "@konfeature/erpc-config-generator",
   "description": "Simple typescript tools to generate eRPC yaml config file",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "KONFeature",
   "maintainers": [
     {
@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "typescript": "^5.5.4",
-    "viem": "^2.19.3"
+    "viem": "^2.19.7"
   },
   "scripts": {
     "format": "biome check --write .",
@@ -34,15 +34,20 @@
     "clean": "rimraf dist",
     "build": "tsup --splitting",
     "build:watch": "tsup --watch --splitting --format esm",
-    "update-erpc-types": "bun run cli/generate-types.ts",
+    "update:erpc-types": "bun run cli/generate-types.ts",
     "update:deps": "npm-check-updates -ui",
-    "example": "bun run example/simple.ts && bun run example/frak.ts"
+    "example": "bun run example/simple.ts && bun run example/frak.ts",
+    "changeset:release": "bun run build && changeset publish",
+    "changeset:version": "changeset version && bun install --lockfile-only"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "tsup": "^8.2.4",
     "@types/bun": "latest",
-    "npm-check-updates": "^17.0.6"
+    "@changesets/changelog-git": "^0.2.0",
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.7",
+    "npm-check-updates": "^17.0.6",
+    "tsup": "^8.2.4"
   },
   "dependencies": {
     "yaml": "^2.5.0"

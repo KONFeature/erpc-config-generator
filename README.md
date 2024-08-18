@@ -10,30 +10,129 @@ This project is currently under active development. Features and API may change.
 
 - [x] TypeScript types for eRPC config
 - [x] Write YAML config file for eRPC config
-- [ ] Viem support to ease with chain and network configurations
-- [ ] Helpers for networks, upstream, and auth configurations
-
-## Overview
-
-This library aims to simplify the process of creating and managing eRPC configurations by providing a TypeScript-based builder pattern. It allows you to programmatically create eRPC configs with type safety and output them as YAML files.
+- [x] Helpers for networks, upstream, and auth configurations
+- [x] Support for various blockchain networks and RPC providers
+- [ ] Cleaner rate limit configuration and auto completion
+- [ ] Builder pattern with chaining (like `createProject(...).addRateLimits(...)/* a few more steps */.write(...)`)
 
 ## Installation
 
 ```bash
-bun add erpc-config-builder
+bun add @konfeature/erpc-config-builder
 ```
 
 ## Usage
 
-For a detailed example of how to use this library, please refer to our [simple example](example/simple.ts) in the repository.
+Here's a basic overview of how to use the eRPC Config Builder:
 
-This example demonstrates:
+```typescript
+import {
+  writeErpcConfig,
+  buildEvmNetworks,
+  buildRateLimit,
+  buildAlchemyUpstream,
+  buildProject,
+  envVariable,
+  type Config
+} from '@konfeature/erpc-config-builder';
 
-1. How to create individual components like rate limit budgets, upstreams, and network configurations
-2. How to combine these components into a complete eRPC configuration
-3. How to use the `writeErpcConfig` function to output the configuration as a YAML file
+// Build rate limits
+const rateLimits = buildRateLimit({
+  id: "alchemy-rate-limit",
+  rules: [{ method: "*", maxCount: 200, period: "1s" }],
+});
 
-You can use this example as a starting point for creating your own eRPC configurations.
+// Build networks
+const networks = buildEvmNetworks({
+  chains: [arbitrum, optimism],
+  generic: {
+    // Generic network configuration
+  },
+  networks: {
+    // Specific network configurations
+  }
+});
+
+// Build upstreams
+const upstreams = [
+  buildAlchemyUpstream({
+    apiKey: envVariable("ALCHEMY_API_KEY"),
+    rateLimitBudget: rateLimits.id,
+  }),
+];
+
+// Build projects
+const project = buildProject({
+  id: "my-project",
+  networks,
+  upstreams,
+  // Other project configuration
+});
+
+// Create main config
+const config: Config = {
+  logLevel: envVariable("ERPC_LOG_LEVEL"),
+  projects: [project],
+  rateLimiters: { budgets: [rateLimits] },
+  // Other configuration options
+};
+
+// Write config to YAML file
+writeErpcConfig({ config, outputPath: "erpc-config.yaml" });
+```
+
+## API Overview
+
+### Config Writing
+
+- `writeErpcConfig({ config, outputPath })`: Write the complete eRPC configuration to a YAML file.
+
+### Environment Variables
+
+- `envVariable(name: string)`: Helper function to reference environment variables in the config.
+
+### Rate Limits
+
+- `buildRateLimit<TRpc extends RpcSchema = EIP1474Methods>({ id, rules })`: Create a rate limit configuration with customizable RPC schema, for type completion.
+
+### Networks
+
+- `buildEvmNetworks<TChains extends readonly [Chain, ...Chain[]]>({ chains, generic, networks })`: Build configurations for EVM-compatible networks, supporting custom chain configurations.
+
+### Upstreams
+
+- `buildEnvioUpstream(options?)`: Configure Envio as an upstream provider.
+- `buildAlchemyUpstream({ apiKey, ...options })`: Configure Alchemy as an upstream provider.
+- `buildPimlicoUpstream({ apiKey, ...options })`: Configure Pimlico as an upstream provider.
+- `buildEvmUpstream<TRpc extends RpcSchema>({ id, endpoint, ...options })`: Configure a generic EVM upstream provider with customizable RPC schema.
+
+### Projects
+
+- `buildProject(projectConfig)`: Create a project configuration.
+
+### Authentication
+
+- `buildNetworkAuthStrategy<TRpc extends RpcSchema>({ network, ...baseOptions })`: Configure network-based authentication.
+- `buildSecretAuthStrategy<TRpc extends RpcSchema>({ secret, ...baseOptions })`: Configure secret-based authentication.
+- `buildJwtAuthStrategy<TRpc extends RpcSchema>({ jwt, ...baseOptions })`: Configure JWT-based authentication.
+- `buildSiweAuthStrategy<TRpc extends RpcSchema>({ siwe, ...baseOptions })`: Configure Sign-In with Ethereum authentication.
+
+### Types
+
+The library exports two custom utility types:
+
+- `RpcMethodWithRegex<TRpc>`: Represents RPC methods, including support for wildcard patterns.
+- `OptionalRateLimit<T>`: Makes the `rateLimitBudget` field optional in a type that includes it.
+
+All other exported types (such as `Config`, `ServerConfig`, `DatabaseConfig`, etc.) are TypeScript representations of the original eRPC Go config type definitions. These provide strong typing for configuration objects and can be imported and used in your TypeScript projects.
+
+For a complete list of available types, refer to the type definitions in the library.
+
+## Usage examples
+
+For a simple setup, please refer to the [simple example](example/simple.ts) in the repository.
+
+For more detailed examples and advanced usage, please refer to the [frak example](example/frak.ts) in the repository.
 
 ## Contributing
 

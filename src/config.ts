@@ -6,11 +6,14 @@ const header =
     "# Config generated using: https://github.com/KONFeature/erpc-config-generator";
 
 /**
- * Create an erpc config
+ * Write the `erpc.yaml` output file
  * @param config
  * @param outputPath
  */
-export function writeErpcConfig(config: Config, outputPath = "erpc.yaml") {
+export function writeErpcConfig({
+    config,
+    outputPath = "erpc.yaml",
+}: { config: Config; outputPath?: string }) {
     // Stringify the config object
     const yamlStr = stringify(config, {
         lineWidth: -1, // Disable line wrapping

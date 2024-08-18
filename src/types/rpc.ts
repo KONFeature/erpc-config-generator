@@ -1,32 +1,26 @@
 import type { EIP1474Methods, RpcSchema } from "viem";
 
 /**
- * Extract rpc method prefix from a schema and add a * to them
+ * Split every rpc method by a '_' and combine them with a *
  */
-export type RpcMethodGenerics<TRpc extends RpcSchema> =
+export type RpcMethodSplitted<TRpc extends RpcSchema> =
     TRpc[number]["Method"] extends `${infer Prefix}_${string}`
         ? `${Prefix}_*`
         : never;
 
 /**
- * Generic types to accept rpc methods from a schema.
+ * Type that accept any method of an rpc schema, a combinaison of methods splitted by a '_' and combined with a * or a *
  */
-export type RpcMethod<TRpc extends RpcSchema> =
+export type RpcMethodWithRegex<TRpc extends RpcSchema> =
     | TRpc[number]["Method"]
-    | RpcMethodGenerics<TRpc>
+    | RpcMethodSplitted<TRpc>
     | "*"
     | (string & {});
 
 /**
- * Generic types for any combinaison of rpc methods splitted by a '_' and combined with a *
+ * List of all the bundlers specifics methods
  */
-export type RpcMethodCombinaison<TRpc extends RpcSchema> =
-    `${RpcMethod<TRpc>}${"" | `_${RpcMethod<TRpc>}`}`;
-
-/**
- * List of all the bundlers methods
- */
-export const bundlersMethods: RpcMethod<EIP1474Methods>[] = [
+export const bundlersMethods: RpcMethodWithRegex<EIP1474Methods>[] = [
     "eth_estimateUserOperationGas",
     "eth_getUserOperationByHash",
     "eth_getUserOperationReceipt",
