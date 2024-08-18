@@ -1,3 +1,4 @@
+import { writeFileSync } from "node:fs";
 import { stringify } from "yaml";
 import type { Config } from "../../generatedTypes/erpcTypes";
 
@@ -24,5 +25,5 @@ export function writeErpcConfig({
     const finalString = `${header}\n${yamlStr}`;
 
     // Write it to the file
-    Bun.write(outputPath, finalString);
+    writeFileSync(outputPath, finalString);
 }

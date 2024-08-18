@@ -59,6 +59,7 @@
     "tsup": "^8.2.4"
   },
   "dependencies": {
+    "bundle-require": "^5.0.0",
     "gluegun": "^5.2.0",
     "yaml": "^2.5.0"
   }

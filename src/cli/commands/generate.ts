@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { bundleRequire } from "bundle-require";
 import type { GluegunToolbox } from "gluegun";
 import type { Config } from "../../generatedTypes/erpcTypes";
 import { writeErpcConfig } from "../utils/config";
@@ -8,10 +9,9 @@ import { writeErpcConfig } from "../utils/config";
  * The command to generate the eRPC config
  */
 export async function generate({ print, parameters }: GluegunToolbox) {
-    // Header
-    print.info("==============================");
-    print.info("==   eRPC Config Generator  ==");
-    print.info("==============================");
+    const spinner = print.spin({ text: "Generating eRPC config file" });
+    spinner.start();
+    print.newline();
 
     // Extract the arguments
     const configFile = parameters.options.config ?? "./erpc-config.ts";
@@ -25,20 +25,25 @@ export async function generate({ print, parameters }: GluegunToolbox) {
     }
 
     // Log a few stuff
-    print.info(" - Parmaeters:");
-    print.info(`   - Configuration file: ${configFile}`);
-    print.info(`   - Output file: ${outputFile}`);
+    print.info("Parmaeters:");
+    print.info(` - Configuration file: ${configFile}`);
+    print.info(` - Output file: ${outputFile}`);
 
     // Load the user config
+    spinner.text = "Loading typescript eRPC config";
     const config = await loadConfigFromFile(configFile);
 
-    // Start the file writing
-    print.info("Generating the eRPC config file...");
+    // Log a few info
+    print.info("Config:");
+    print.info(` - Projects: ${config.projects.length}`);
+    print.info(
+        ` - Rate limiters: ${config.rateLimiters?.budgets?.length ?? 0}`
+    );
 
     // Write the erpc config
+    spinner.text = "Writing eRPC config file";
     writeErpcConfig({ config, outputPath: outputFile });
-
-    print.success("eRPC config file generated!");
+    spinner.succeed("eRPC config file written!");
 }
 
 /**
@@ -63,10 +68,10 @@ async function loadConfigFromFile(configFile: string): Promise<Config> {
     }
 
     // Find the exported config stuff
-    const userConfig = await import(absoluteConfigPath);
+    const userConfig = await bundleRequire({ filepath: absoluteConfigPath });
 
     // Check if there's a default export
-    const config = userConfig.default;
+    const config = userConfig.mod.default;
     if (!config) {
         throw new Error(
             `No default export found in config file at: ${configFile}`
