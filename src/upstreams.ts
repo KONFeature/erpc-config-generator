@@ -53,18 +53,18 @@ export function buildEnvioUpstream({
  */
 export function buildAlchemyUpstream({
     id = "alchemy",
-    endpoint,
+    apiKey,
     ...options
 }: {
     id?: string;
-    endpoint: string;
+    apiKey: string;
 } & UpstreamOverride<
     [...PublicRpcSchema, ...WalletRpcSchema]
 >): UpstreamConfig {
     return {
         // Base stuff
         id,
-        endpoint,
+        endpoint: `evm+alchemy://${apiKey}`,
         type: "evm+alchemy",
         rateLimitBudget: options.rateLimitBudget ?? "",
         // Generic stuff
@@ -83,16 +83,16 @@ export function buildAlchemyUpstream({
  */
 export function buildPimlicoUpstream({
     id = "pimlico",
-    endpoint = "pimlico://public",
+    apiKey = "public",
     ...options
 }: {
     id?: string;
-    endpoint?: string;
+    apiKey?: string;
 } & UpstreamOverride<BundlerRpcSchema>): UpstreamConfig {
     return {
         // Base stuff
         id,
-        endpoint,
+        endpoint: `evm+pimlico://${apiKey}`,
         rateLimitBudget: options.rateLimitBudget ?? "",
         type: "evm+pimlico",
         // Generic stuff

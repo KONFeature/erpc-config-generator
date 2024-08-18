@@ -9,4 +9,10 @@ export {
 export { buildEvmNetworks } from "./networks";
 export { buildRateLimit } from "./rateLimits";
 export { buildProject } from "./project";
+export {
+    buildNetworkAuthStrategy,
+    buildSecretAuthStrategy,
+    buildJwtAuthStrategy,
+    buildSiweAuthStrategy,
+} from "./auth";
 export * from "./generatedTypes/erpcTypes";

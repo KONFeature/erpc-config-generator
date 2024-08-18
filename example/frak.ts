@@ -1,4 +1,3 @@
-import { type PublicRpcSchema, rpcSchema } from "viem";
 import {
     arbitrum,
     arbitrumSepolia,
@@ -17,6 +16,7 @@ import {
     buildPimlicoUpstream,
     buildProject,
     buildRateLimit,
+    buildSecretAuthStrategy,
     envVariable,
     writeErpcConfig,
 } from "../dist";
@@ -58,7 +58,6 @@ const pimlicoRateLimits = buildRateLimit({
 });
 
 // Each networks we will use
-// todo: different rate limits for testnet and prod environment
 const mainnetNetworks = buildEvmNetworks({
     chains: [polygon, arbitrum, optimism, base],
     generic: {
@@ -111,12 +110,12 @@ const upstreams = [
         rateLimitBudget: envioRateLimits.id,
     }),
     buildAlchemyUpstream({
-        endpoint: `evm+alchemy://${envVariable("ALCHEMY_API_KEY")}`,
+        apiKey: envVariable("ALCHEMY_API_KEY"),
         rateLimitBudget: alchemyRateLimits.id,
     }),
 ];
 const pimlicoUpstream = buildPimlicoUpstream({
-    endpoint: `pimlico://${envVariable("PIMLICO_API_KEY")}`,
+    apiKey: envVariable("PIMLICO_API_KEY"),
     rateLimitBudget: pimlicoRateLimits.id,
 });
 
@@ -125,6 +124,15 @@ const ponderProject: ProjectConfig = buildProject({
     id: "ponder-rpc",
     networks,
     upstreams,
+    auth: {
+        strategies: [
+            buildSecretAuthStrategy({
+                secret: {
+                    value: envVariable("PONDER_RPC_SECRET"),
+                },
+            }),
+        ],
+    },
 });
 
 // Build the nexus rpc project
@@ -140,6 +148,15 @@ const nexusProject: ProjectConfig = buildProject({
         exposedHeaders: ["X-Request-ID"],
         allowCredentials: true,
         maxAge: 3600,
+    },
+    auth: {
+        strategies: [
+            buildSecretAuthStrategy({
+                secret: {
+                    value: envVariable("NEXUS_RPC_SECRET"),
+                },
+            }),
+        ],
     },
 });
 
