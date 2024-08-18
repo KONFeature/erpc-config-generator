@@ -35,8 +35,7 @@ projects:
         rateLimitBudget: ""
         vendorName: Alchemy
         ignoreMethods: []
-        allowMethods:
-          - "*"
+        allowMethods: []
         autoIgnoreUnsupportedMethods: true
         options:
           failsafe:
@@ -54,6 +53,5 @@ projects:
         type: evm+envio
         vendorName: Envio
         ignoreMethods: []
-        allowMethods:
-          - "*"
+        allowMethods: []
         autoIgnoreUnsupportedMethods: true

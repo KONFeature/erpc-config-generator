@@ -41,7 +41,7 @@ export function buildEnvioUpstream({
         // Generic stuff
         vendorName: "Envio",
         ignoreMethods: [],
-        allowMethods: ["*"],
+        allowMethods: [],
         autoIgnoreUnsupportedMethods: true,
         // Overide options
         ...options,
@@ -70,7 +70,7 @@ export function buildAlchemyUpstream({
         // Generic stuff
         vendorName: "Alchemy",
         ignoreMethods: [],
-        allowMethods: ["*"],
+        allowMethods: [],
         autoIgnoreUnsupportedMethods: true,
         // Overide options
         ...options,
@@ -98,7 +98,7 @@ export function buildPimlicoUpstream({
         // Generic stuff
         vendorName: "Pimlico",
         ignoreMethods: [],
-        allowMethods: ["*"],
+        allowMethods: [],
         autoIgnoreUnsupportedMethods: true,
         // Overide options
         ...options,
@@ -126,7 +126,7 @@ export function buildEvmUpstream<TRpc extends RpcSchema = PublicRpcSchema>({
         // Generic stuff
         vendorName: "Generic Evm",
         ignoreMethods: [],
-        allowMethods: ["*"],
+        allowMethods: [],
         autoIgnoreUnsupportedMethods: true,
         // Overide options
         ...options,

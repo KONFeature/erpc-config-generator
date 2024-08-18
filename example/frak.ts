@@ -117,7 +117,7 @@ const pimlicoSpecificMethods: RpcMethod<EIP1474Methods>[] = [
 const upstreams = [
     buildEnvioUpstream({
         rateLimitBudget: envioRateLimits.id,
-        ignoreMethods: pimlicoSpecificMethods,
+        ignoreMethods: [...pimlicoSpecificMethods, "alchemy_*"],
     }),
     buildAlchemyUpstream({
         apiKey: envVariable("ALCHEMY_API_KEY"),
@@ -128,6 +128,7 @@ const upstreams = [
 const pimlicoUpstream = buildPimlicoUpstream({
     apiKey: envVariable("PIMLICO_API_KEY"),
     rateLimitBudget: pimlicoRateLimits.id,
+    ignoreMethods: ["*"],
     allowMethods: pimlicoSpecificMethods,
 });
 
