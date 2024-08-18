@@ -16,3 +16,4 @@ export {
     buildSiweAuthStrategy,
 } from "./auth";
 export * from "./generatedTypes/erpcTypes";
+export { bundlersMethods } from "./types/rpc";

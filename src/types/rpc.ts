@@ -1,4 +1,4 @@
-import type { RpcSchema } from "viem";
+import type { EIP1474Methods, RpcSchema } from "viem";
 
 /**
  * Extract rpc method prefix from a schema and add a * to them
@@ -22,3 +22,14 @@ export type RpcMethod<TRpc extends RpcSchema> =
  */
 export type RpcMethodCombinaison<TRpc extends RpcSchema> =
     `${RpcMethod<TRpc>}${"" | `_${RpcMethod<TRpc>}`}`;
+
+/**
+ * List of all the bundlers methods
+ */
+export const bundlersMethods: RpcMethod<EIP1474Methods>[] = [
+    "eth_estimateUserOperationGas",
+    "eth_getUserOperationByHash",
+    "eth_getUserOperationReceipt",
+    "eth_sendUserOperation",
+    "eth_supportedEntryPoints",
+];

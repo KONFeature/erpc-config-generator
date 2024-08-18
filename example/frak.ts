@@ -1,3 +1,4 @@
+import type { EIP1474Methods } from "viem";
 import {
     arbitrum,
     arbitrumSepolia,
@@ -17,9 +18,11 @@ import {
     buildProject,
     buildRateLimit,
     buildSecretAuthStrategy,
+    bundlersMethods,
     envVariable,
     writeErpcConfig,
 } from "../dist";
+import type { RpcMethod } from "../src/types/rpc";
 
 /* -------------------------------------------------------------------------- */
 /*                  Config generator for the Frak eRPC config                 */
@@ -104,19 +107,28 @@ const testnetNetworks = buildEvmNetworks({
 });
 const networks = [...mainnetNetworks, ...testnetNetworks];
 
+const pimlicoSpecificMethods: RpcMethod<EIP1474Methods>[] = [
+    ...bundlersMethods,
+    "pm_*",
+    "pimlico_*",
+];
+
 // Build each upstream we will use
 const upstreams = [
     buildEnvioUpstream({
         rateLimitBudget: envioRateLimits.id,
+        ignoreMethods: pimlicoSpecificMethods,
     }),
     buildAlchemyUpstream({
         apiKey: envVariable("ALCHEMY_API_KEY"),
         rateLimitBudget: alchemyRateLimits.id,
+        ignoreMethods: pimlicoSpecificMethods,
     }),
 ];
 const pimlicoUpstream = buildPimlicoUpstream({
     apiKey: envVariable("PIMLICO_API_KEY"),
     rateLimitBudget: pimlicoRateLimits.id,
+    allowMethods: pimlicoSpecificMethods,
 });
 
 // Build the ponder indexing project
@@ -142,7 +154,11 @@ const nexusProject: ProjectConfig = buildProject({
     networks,
     upstreams: [...upstreams, pimlicoUpstream],
     cors: {
-        allowedOrigins: ["*"],
+        allowedOrigins: [
+            "https://nexus.frak.id",
+            "https://nexus-dev.frak.id",
+            "http://localhost:3000",
+        ],
         allowedMethods: ["GET", "POST", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         exposedHeaders: ["X-Request-ID"],
