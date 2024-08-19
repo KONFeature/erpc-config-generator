@@ -115,7 +115,36 @@ For a complete list of available types, refer to the type definitions in the lib
 
 For a simple setup, please refer to the [simple example](example/simple.ts) in the repository.
 
-For more detailed examples and advanced usage, please refer to the [frak example](example/frak.ts) in the repository.
+## Real-World Usage
+
+For a comprehensive, real-world example of how to use the eRPC Config Generator, you can refer to the Frak indexer repository:
+
+[Frak Indexer eRPC Configuration](https://github.com/frak-id/frak-indexer/tree/main/packages/erpc)
+
+This demonstrates:
+
+1. How to structure your eRPC configuration in a TypeScript project
+2. Setting up multiple networks and upstreams
+3. Configuring rate limits and authentication strategies
+4. Using environment variables for sensitive information
+
+The entire configuration is contained in a single file:
+
+- `erpc-config.ts`: The main configuration file that exports the complete eRPC config
+
+To generate the YAML configuration from this setup, the project uses:
+
+```bash
+pnpm erpc-config
+```
+
+The resulting YAML configuration is output to:
+
+- `erpc.yaml`: The generated eRPC configuration file
+
+This example showcases how to integrate the eRPC Config Generator into a larger project, using pnpm as the package manager. It's a great reference for structuring your own eRPC configuration in a production environment.
+
+You can use this as a template for your own project, adjusting the network configurations, upstreams, and other settings as needed for your specific use case.
 
 ## Contributing
 
