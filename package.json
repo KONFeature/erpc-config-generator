@@ -19,7 +19,7 @@
     "src/**/*.ts"
   ],
   "bin": {
-    "erpc-config": "bin/cli/cli.cjs"
+    "erpc-config": "./dist/cli/index.js"
   },
   "exports": {
     ".": {

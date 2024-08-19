@@ -11,7 +11,6 @@ import { writeErpcConfig } from "../utils/config";
 export async function generate({ print, parameters }: GluegunToolbox) {
     const spinner = print.spin({ text: "Generating eRPC config file" });
     spinner.start();
-    print.newline();
 
     // Extract the arguments
     const configFile = parameters.options.config ?? "./erpc-config.ts";
@@ -25,7 +24,8 @@ export async function generate({ print, parameters }: GluegunToolbox) {
     }
 
     // Log a few stuff
-    print.info("Parmaeters:");
+    print.newline();
+    print.info("Parameters:");
     print.info(` - Configuration file: ${configFile}`);
     print.info(` - Output file: ${outputFile}`);
 
@@ -34,6 +34,7 @@ export async function generate({ print, parameters }: GluegunToolbox) {
     const config = await loadConfigFromFile(configFile);
 
     // Log a few info
+    print.newline();
     print.info("Config:");
     print.info(` - Projects: ${config.projects.length}`);
     print.info(
