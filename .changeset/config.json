@@ -1,6 +1,6 @@
 {
     "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
-    "changelog": ["@changesets/changelog-github", { "repo": "konfeature/erpc-config-generator" }],
+    "changelog": ["@changesets/changelog-github", { "repo": "KONFeature/erpc-config-generator" }],
     "commit": false,
     "fixed": [],
     "linked": [],
