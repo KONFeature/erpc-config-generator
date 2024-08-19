@@ -1,5 +1,11 @@
 # erpc-config-generator
 
+## 0.0.5
+
+### Patch Changes
+
+- [`d4d89a5`](https://github.com/KONFeature/erpc-config-generator/commit/d4d89a5f63c19a50d1b20d2cc67274ba3ddb2b78) Thanks [@KONFeature](https://github.com/KONFeature)! - Fix bin path for the cli
+
 ## 0.0.4
 
 ### Patch Changes
