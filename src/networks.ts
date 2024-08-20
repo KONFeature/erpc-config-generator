@@ -24,7 +24,7 @@ type PartialNetworkConfig = Partial<Omit<NetworkConfig, "evm">> & {
  *
  * @default The default rate limit budget is empty
  * @default The default block tracker interval is empty
- * @default The default finality depth is 128
+ * @default The default finality depth is 1024 (same as default erpc here: https://github.com/erpc/erpc/blob/8515ca28d6281d3ed488129ca274d1a4ec0c06c7/erpc/networks.go#L314)
  */
 export function buildEvmNetworks<
     TChains extends readonly [Chain, ...Chain[]] = readonly [Chain, ...Chain[]],
@@ -57,7 +57,7 @@ export function buildEvmNetworks<
             rateLimitBudget: rateLimitBudget,
             evm: {
                 chainId: chain.id,
-                finalityDepth: options.evm?.finalityDepth ?? 128,
+                finalityDepth: options.evm?.finalityDepth ?? 1024,
                 blockTrackerInterval: options?.evm?.blockTrackerInterval ?? "",
             },
         };
