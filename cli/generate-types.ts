@@ -1,4 +1,4 @@
-import { readdir, rm } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 
 /**
  * Method used to generate fresh erpc types from the main branch of the erpc repo

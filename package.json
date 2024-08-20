@@ -19,7 +19,7 @@
     "src/**/*.ts"
   ],
   "bin": {
-    "erpc-config": "./dist/cli/index.js"
+    "erpc-config": "./dist/cli/index.cjs"
   },
   "exports": {
     ".": {
@@ -45,7 +45,7 @@
     "build:watch": "tsup --watch --splitting --format esm",
     "update:erpc-types": "bun run cli/generate-types.ts",
     "update:deps": "npm-check-updates -ui",
-    "example": "bun run src/cli/index.ts --config ./example/simple.ts --out ./example/simple.yaml",
+    "example": "bun run build && bun run erpc-config --config ./example/simple.ts --out ./example/simple.yaml",
     "changeset:release": "bun run build && changeset publish",
     "changeset:version": "changeset version && bun install --lockfile-only"
   },

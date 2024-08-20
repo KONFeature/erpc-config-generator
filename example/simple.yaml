@@ -14,19 +14,19 @@ projects:
         rateLimitBudget: ""
         evm:
           chainId: 421614
-          finalityDepth: 128
+          finalityDepth: 1024
           blockTrackerInterval: ""
       - architecture: evm
         rateLimitBudget: ""
         evm:
           chainId: 80002
-          finalityDepth: 128
+          finalityDepth: 1024
           blockTrackerInterval: ""
       - architecture: evm
         rateLimitBudget: ""
         evm:
           chainId: 11155420
-          finalityDepth: 128
+          finalityDepth: 1024
           blockTrackerInterval: ""
     upstreams:
       - id: alchemy
@@ -37,16 +37,15 @@ projects:
         ignoreMethods: []
         allowMethods: []
         autoIgnoreUnsupportedMethods: true
-        options:
-          failsafe:
-            timeout:
-              duration: 15s
-            retry:
-              maxAttempts: 2
-              delay: 1000ms
-              backoffMaxDelay: 10s
-              backoffFactor: 0.3
-              jitter: 500ms
+        failsafe:
+          timeout:
+            duration: 15s
+          retry:
+            maxAttempts: 2
+            delay: 1000ms
+            backoffMaxDelay: 10s
+            backoffFactor: 0.3
+            jitter: 500ms
       - id: envio
         endpoint: evm+envio://rpc.hypersync.xyz
         rateLimitBudget: ""

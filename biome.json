@@ -13,6 +13,9 @@
             "recommended": true,
             "complexity": {
                 "noUselessTernary": "error"
+            },
+            "correctness": {
+                "noUnusedImports": "error"
             }
         }
     },

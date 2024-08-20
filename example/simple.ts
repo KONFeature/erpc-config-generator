@@ -1,13 +1,11 @@
 import { arbitrumSepolia, optimismSepolia, polygonAmoy } from "viem/chains";
 import {
     type Config,
-    type RateLimitBudgetConfig,
     buildAlchemyUpstream,
     buildEnvioUpstream,
     buildEvmNetworks,
     buildProject,
     envVariable,
-    writeErpcConfig,
 } from "../src";
 
 /* -------------------------------------------------------------------------- */
@@ -15,19 +13,17 @@ import {
 /* -------------------------------------------------------------------------- */
 
 const alchemyUpstream = buildAlchemyUpstream({
-    endpoint: `evm+alchemy://${envVariable("ALCHEMY_API_KEY")}`,
-    options: {
-        failsafe: {
-            timeout: {
-                duration: "15s",
-            },
-            retry: {
-                maxAttempts: 2,
-                delay: "1000ms",
-                backoffMaxDelay: "10s",
-                backoffFactor: 0.3,
-                jitter: "500ms",
-            },
+    apiKey: envVariable("ALCHEMY_API_KEY"),
+    failsafe: {
+        timeout: {
+            duration: "15s",
+        },
+        retry: {
+            maxAttempts: 2,
+            delay: "1000ms",
+            backoffMaxDelay: "10s",
+            backoffFactor: 0.3,
+            jitter: "500ms",
         },
     },
 });

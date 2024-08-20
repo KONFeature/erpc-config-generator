@@ -48,25 +48,64 @@ This will read the `erpc-config.ts` file in the current directory and output the
 
 ## CLI Usage
 
-The `erpc-config` command supports the following options:
+The eRPC Config Generator CLI provides two main commands: `generate` (default) and `validate`.
+
+### Generate Command
+
+Generate an eRPC YAML config file from the TypeScript config:
 
 ```
 erpc-config [options]
+```
+or
+```
+erpc-config generate [options]
+```
 
 Options:
   --config    The path to the config file (default: "./erpc-config.ts")
   --out       The output file path (default: "./erpc.yaml")
-```
 
 Examples:
 
 ```bash
 # Use default paths
-npx erpc-config
+bun erpc-config
 
 # Specify custom input and output paths
-npx erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-config.yaml
+bun erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-config.yaml
+
+# Explicitly use the generate command
+bun erpc-config generate --config ./custom-config.ts
 ```
+
+### Validate Command
+
+Check the validity of the eRPC config file:
+
+```
+erpc-config validate [options]
+```
+
+Options:
+  --config    The path to the config file to validate (default: "./erpc-config.ts")
+
+Example:
+
+```bash
+# Validate the default config file
+bun erpc-config validate
+
+# Validate a specific config file
+bun erpc-config validate --config ./configs/my-erpc-config.ts
+```
+
+### General CLI Options
+
+- `--help`, `-h`: Show help information
+- `--version`, `-v`: Show version information
+
+You can run these commands using `bun`, `npm`, or any other package runner of your choice, as long as you have the dependency in your `packages.json`.
 
 ## API Overview
 
