@@ -1,5 +1,13 @@
 # erpc-config-generator
 
+## 0.0.6
+
+### Patch Changes
+
+- [`718a691`](https://github.com/KONFeature/erpc-config-generator/commit/718a691bec9d50e80bc02e0faea05a9c971e27e9) Thanks [@KONFeature](https://github.com/KONFeature)! - Update default network value `finalityDepth` from 128 to 1024
+
+- [`d05c382`](https://github.com/KONFeature/erpc-config-generator/commit/d05c38206bc299364aa0b1a01f93a43447878f56) Thanks [@KONFeature](https://github.com/KONFeature)! - Add `validate` command + some validation step before config file generation
+
 ## 0.0.5
 
 ### Patch Changes
