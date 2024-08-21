@@ -1,8 +1,8 @@
 import { arbitrumSepolia, optimismSepolia, polygonAmoy } from "viem/chains";
 import {
-    type Config,
     buildAlchemyUpstream,
     buildEnvioUpstream,
+    buildErpcConfig,
     buildEvmNetworks,
     buildProject,
     envVariable,
@@ -35,31 +35,27 @@ const networks = buildEvmNetworks({
 });
 
 /* -------------------------------------------------------------------------- */
-/*                            2. Create your config                           */
+/*                       2. Create config and export it                       */
 /* -------------------------------------------------------------------------- */
 
-const config: Config = {
-    logLevel: "warn",
-    database: {
-        evmJsonRpcCache: {
-            driver: "postgresql",
-            postgresql: {
-                connectionUri: envVariable("ERPC_DATABASE_URL"),
-                table: "rpc_cache",
+export default buildErpcConfig({
+    config: {
+        logLevel: "warn",
+        database: {
+            evmJsonRpcCache: {
+                driver: "postgresql",
+                postgresql: {
+                    connectionUri: envVariable("ERPC_DATABASE_URL"),
+                    table: "rpc_cache",
+                },
             },
         },
+        projects: [
+            buildProject({
+                id: "simple-erpc",
+                networks,
+                upstreams: [alchemyUpstream, envioUpstream],
+            }),
+        ],
     },
-    projects: [
-        buildProject({
-            id: "simple-erpc",
-            networks,
-            upstreams: [alchemyUpstream, envioUpstream],
-        }),
-    ],
-};
-
-/* -------------------------------------------------------------------------- */
-/*                            3. Write your config                            */
-/* -------------------------------------------------------------------------- */
-
-export default config;
+});
