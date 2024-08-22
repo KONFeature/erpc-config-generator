@@ -16,4 +16,5 @@ packages:
       - "config_test.go"
       - "errors.go"
       - "request.go"
+      - "response.go"
       - "json_rpc.go"

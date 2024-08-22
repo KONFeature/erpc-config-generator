@@ -13,16 +13,18 @@ export interface Config {
   projects: (ProjectConfig | undefined)[];
   rateLimiters?: RateLimiterConfig;
   metrics?: MetricsConfig;
+  admin?: AdminConfig;
 }
 export interface ServerConfig {
   httpHost: string;
   httpPort: number /* int */;
   maxTimeout: string;
 }
+export interface AdminConfig {
+  auth?: AuthConfig;
+}
 export interface DatabaseConfig {
   evmJsonRpcCache?: ConnectorConfig;
-  evmBlockIngestions?: ConnectorConfig;
-  rateLimitSnapshots?: ConnectorConfig;
 }
 export interface ConnectorConfig {
   driver: string;
@@ -34,10 +36,18 @@ export interface ConnectorConfig {
 export interface MemoryConnectorConfig {
   maxItems: number /* int */;
 }
+export interface TLSConfig {
+  enabled: boolean;
+  certFile: string;
+  keyFile: string;
+  caFile: string;
+  insecureSkipVerify: boolean;
+}
 export interface RedisConnectorConfig {
   addr: string;
   password: string;
   db: number /* int */;
+  tls?: TLSConfig;
 }
 export interface DynamoDBConnectorConfig {
   table: string;
@@ -61,6 +71,7 @@ export interface AwsAuthConfig {
 }
 export interface ProjectConfig {
   id: string;
+  admin?: AdminConfig;
   auth?: AuthConfig;
   cors?: CORSConfig;
   upstreams: (UpstreamConfig | undefined)[];
@@ -85,11 +96,12 @@ export interface UpstreamConfig {
   jsonRpc?: JsonRpcUpstreamConfig;
   ignoreMethods: string[];
   allowMethods: string[];
-  autoIgnoreUnsupportedMethods: boolean;
+  autoIgnoreUnsupportedMethods?: boolean;
   failsafe?: FailsafeConfig;
   rateLimitBudget: string;
   rateLimitAutoTune?: RateLimitAutoTuneConfig;
 }
+export type Alias = UpstreamConfig;
 export interface RateLimitAutoTuneConfig {
   enabled: boolean;
   adjustmentPeriod: string;
