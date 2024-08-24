@@ -1,5 +1,8 @@
 import type { Config } from "../../../generatedTypes/erpcTypes";
-import { checkRateLimitsDuplication, checkRateLimitsReference } from "./rateLimits";
+import {
+    checkRateLimitsDuplication,
+    checkRateLimitsReference,
+} from "./rateLimits";
 
 type ConfigCheckResult = {
     errors: ConfigError[];

@@ -245,6 +245,8 @@ export const UpstreamTypeEvm: UpstreamType = "evm";
 export const UpstreamTypeEvmAlchemy: UpstreamType = "evm+alchemy";
 export const UpstreamTypeEvmEnvio: UpstreamType = "evm+envio";
 export const UpstreamTypeEvmPimlico: UpstreamType = "evm+pimlico";
+export const UpstreamTypeEvmThirdweb: UpstreamType = "evm+thirdweb";
+export const UpstreamTypeEvmEtherspot: UpstreamType = "evm+etherspot";
 export type Upstream = any;
 
 //////////
