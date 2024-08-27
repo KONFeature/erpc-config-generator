@@ -1,5 +1,13 @@
 # erpc-config-generator
 
+## 0.0.8
+
+### Patch Changes
+
+- [`756d261`](https://github.com/KONFeature/erpc-config-generator/commit/756d261e5dd79e78962b3ac894b05b26fa13f5c7) Thanks [@KONFeature](https://github.com/KONFeature)! - Optional `server` and `metrics` field in the root config object + generation info
+
+- [`756d261`](https://github.com/KONFeature/erpc-config-generator/commit/756d261e5dd79e78962b3ac894b05b26fa13f5c7) Thanks [@KONFeature](https://github.com/KONFeature)! - Update erpc types for erpc `v0.0.18`
+
 ## 0.0.7
 
 ### Patch Changes
