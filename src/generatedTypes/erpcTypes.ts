@@ -16,7 +16,8 @@ export interface Config {
   admin?: AdminConfig;
 }
 export interface ServerConfig {
-  httpHost: string;
+  httpHostV4: string;
+  httpHostV6: string;
   httpPort: number /* int */;
   maxTimeout: string;
 }
@@ -216,7 +217,8 @@ export interface NetworkStrategyConfig {
 }
 export interface MetricsConfig {
   enabled: boolean;
-  host: string;
+  hostV4: string;
+  hostV6: string;
   port: number /* int */;
 }
 
@@ -243,6 +245,8 @@ export type Network = any;
 export type UpstreamType = string;
 export const UpstreamTypeEvm: UpstreamType = "evm";
 export const UpstreamTypeEvmAlchemy: UpstreamType = "evm+alchemy";
+export const UpstreamTypeEvmDrpc: UpstreamType = "evm+drpc";
+export const UpstreamTypeEvmBlastapi: UpstreamType = "evm+blastapi";
 export const UpstreamTypeEvmEnvio: UpstreamType = "evm+envio";
 export const UpstreamTypeEvmPimlico: UpstreamType = "evm+pimlico";
 export const UpstreamTypeEvmThirdweb: UpstreamType = "evm+thirdweb";

@@ -49,6 +49,26 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
     print.info("Config:");
     print.info(` - Projects: ${stats.projects}`);
     print.info(` - Rate limiters: ${stats.rateLimiters}`);
+    if (stats.server) {
+        print.info(
+            ` - Server IPv4: ${stats.server.hostV4}:${stats.server.port}`
+        );
+        print.info(
+            ` - Server IPv6: ${stats.server.hostV6}:${stats.server.port}`
+        );
+    } else {
+        print.info(" - Server: Will use default from eRPC config");
+    }
+    if (stats.metrics) {
+        print.info(
+            ` - Metrics IPv4: ${stats.metrics.hostV4}:${stats.metrics.port}`
+        );
+        print.info(
+            ` - Metrics IPv6: ${stats.metrics.hostV6}:${stats.metrics.port}`
+        );
+    } else {
+        print.info(" - Metrics: Not enable or not set in the config");
+    }
 
     // Write the erpc config
     spinner.text = "Writing eRPC config file";

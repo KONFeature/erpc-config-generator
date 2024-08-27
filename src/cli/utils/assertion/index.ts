@@ -11,6 +11,16 @@ type ConfigCheckResult = {
     stats: {
         projects: number;
         rateLimiters: number;
+        server?: {
+            port: number;
+            hostV4: string;
+            hostV6: string;
+        };
+        metrics?: {
+            port: number;
+            hostV4: string;
+            hostV6: string;
+        };
     };
 };
 
@@ -64,6 +74,20 @@ export function checkConfigValidity(config: Config): ConfigCheckResult {
     // Update our stats object
     stats.projects = config.projects.length;
     stats.rateLimiters = config.rateLimiters?.budgets?.length ?? 0;
+    stats.server = config.server
+        ? {
+              port: config.server.httpPort,
+              hostV4: config.server.httpHostV4,
+              hostV6: config.server.httpHostV6,
+          }
+        : undefined;
+    stats.metrics = config.metrics?.enabled
+        ? {
+              port: config.metrics.port,
+              hostV4: config.metrics.hostV4,
+              hostV6: config.metrics.hostV6,
+          }
+        : undefined;
 
     // Check for projects duplication
     errors.push(...checkProjectsDuplication(config));
