@@ -16,7 +16,9 @@ export interface Config {
   admin?: AdminConfig;
 }
 export interface ServerConfig {
+  listenV4: boolean;
   httpHostV4: string;
+  listenV6: boolean;
   httpHostV6: string;
   httpPort: number /* int */;
   maxTimeout: string;
@@ -122,7 +124,12 @@ export interface EvmUpstreamConfig {
   nodeType: EvmNodeType;
   engine: string;
   getLogsMaxBlockRange: number /* int */;
-  syncing: boolean;
+  statePollerInterval: string;
+  /**
+   * By default "Syncing" is marked as unknown (nil) and that means we will be retrying empty responses
+   * from such upstream, unless we explicitly know that the upstream is fully synced (false).
+   */
+  syncing?: boolean;
 }
 export interface FailsafeConfig {
   retry?: RetryPolicyConfig;
@@ -217,7 +224,9 @@ export interface NetworkStrategyConfig {
 }
 export interface MetricsConfig {
   enabled: boolean;
+  listenV4: boolean;
   hostV4: string;
+  listenV6: boolean;
   hostV6: string;
   port: number /* int */;
 }
@@ -230,7 +239,6 @@ export const EvmNodeTypeFull: EvmNodeType = "full";
 export const EvmNodeTypeArchive: EvmNodeType = "archive";
 export const EvmNodeTypeSequencer: EvmNodeType = "sequencer";
 export const EvmNodeTypeExecution: EvmNodeType = "execution";
-export type EvmBlockTracker = any;
 
 //////////
 // source: network.go
