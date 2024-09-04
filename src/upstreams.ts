@@ -1,5 +1,6 @@
 import type {
     BundlerRpcSchema,
+    Chain,
     PublicRpcSchema,
     RpcSchema,
     WalletRpcSchema,
@@ -131,4 +132,33 @@ export function buildEvmUpstream<TRpc extends RpcSchema = PublicRpcSchema>({
         // Overide options
         ...options,
     };
+}
+
+/**
+ * Get an evm upstream
+ */
+export function buildFreeUpstreams<TRpc extends RpcSchema = PublicRpcSchema>({
+    chains,
+    ...options
+}: {
+    chains: Chain[];
+    rpcSchema?: TRpc;
+} & UpstreamOverride<TRpc>): UpstreamConfig[] {
+    return chains.map((chain) => {
+        return {
+            // Base stuff
+            rateLimitBudget: options.rateLimitBudget ?? "",
+            // Generic stuff
+            vendorName: "Generic Evm",
+            ignoreMethods: [],
+            allowMethods: [],
+            autoIgnoreUnsupportedMethods: true,
+            // Overide options
+            ...options,
+            // Specific stuff to build the free upstream during config generation
+            id: `free-upstream-${chain.id}`,
+            endpoint: `evm+free://${chain.id}`,
+            type: "evm+free",
+        };
+    });
 }
