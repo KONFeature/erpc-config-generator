@@ -1,5 +1,13 @@
 # erpc-config-generator
 
+## 0.0.10
+
+### Patch Changes
+
+- [`0052307`](https://github.com/KONFeature/erpc-config-generator/commit/00523074072eb5b0f790a1bd774692b6c99d6ef5) Thanks [@KONFeature](https://github.com/KONFeature)! - Add a new `evm+free` type of upstream (alongside the `buildFreeUpstreams(...)` helper) to generate placeholder upstreams that will be filled with the 15 best free rpcs
+
+- [`0052307`](https://github.com/KONFeature/erpc-config-generator/commit/00523074072eb5b0f790a1bd774692b6c99d6ef5) Thanks [@KONFeature](https://github.com/KONFeature)! - Add a new `free-rpc` command to get the 15 best free rpc url for a given chain
+
 ## 0.0.9
 
 ### Patch Changes
