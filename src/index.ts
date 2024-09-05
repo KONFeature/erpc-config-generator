@@ -4,6 +4,7 @@ export {
     buildEnvioUpstream,
     buildEvmUpstream,
     buildPimlicoUpstream,
+    buildFreeUpstreams,
 } from "./upstreams";
 export { buildEvmNetworks } from "./networks";
 export { buildRateLimit } from "./rateLimits";

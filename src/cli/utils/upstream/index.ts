@@ -1,5 +1,5 @@
 import { print } from "gluegun";
-import { toHex } from "viem";
+import { keccak256, slice, toHex } from "viem";
 import type {
     Config,
     ProjectConfig,
@@ -47,10 +47,23 @@ export async function populateFreeRpcConfig({
 
             // Build the new upstreams based on this rpc urls
             const upstreams: UpstreamConfig[] = rpcUrls.map((url) => {
+                // Get the domain name of the url
+                const domain = new URL(url).hostname;
+
+                // Get a uuid for this url
+                const uuid = slice(
+                    keccak256(toHex(`${project.id}-${chainId}-${url}`)),
+                    0,
+                    4
+                );
+
+                // Rebuild an id
+                const id = `free-${domain}-${chainId}-${uuid}`;
+
                 return {
                     ...upstream,
                     vendorName: "Free RPC",
-                    id: `${upstream.id}-${toHex(url)}`,
+                    id,
                     endpoint: url,
                     type: "evm",
                 };
