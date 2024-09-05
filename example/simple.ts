@@ -1,4 +1,11 @@
-import { arbitrumSepolia, optimismSepolia, polygonAmoy } from "viem/chains";
+import {
+    arbitrum,
+    arbitrumSepolia,
+    optimism,
+    optimismSepolia,
+    polygon,
+    polygonAmoy,
+} from "viem/chains";
 import {
     buildAlchemyUpstream,
     buildEnvioUpstream,
@@ -7,6 +14,7 @@ import {
     buildProject,
     envVariable,
 } from "../src";
+import { buildFreeUpstreams } from "../src/upstreams";
 
 /* -------------------------------------------------------------------------- */
 /*              1. Create everything you will need in your config             */
@@ -55,6 +63,13 @@ export default buildErpcConfig({
                 id: "simple-erpc",
                 networks,
                 upstreams: [alchemyUpstream, envioUpstream],
+            }),
+            buildProject({
+                id: "free-erpc",
+                networks,
+                upstreams: buildFreeUpstreams({
+                    chains: [polygon, polygonAmoy, arbitrum, optimism],
+                }),
             }),
         ],
     },

@@ -13,14 +13,15 @@ type ConfigCheckResult = {
         rateLimiters: number;
         server?: {
             port: number;
-            hostV4: string;
-            hostV6: string;
+            hostV4?: string;
+            hostV6?: string;
         };
         metrics?: {
             port: number;
-            hostV4: string;
-            hostV6: string;
+            hostV4?: string;
+            hostV6?: string;
         };
+        freeUpstreamDesired: number;
     };
 };
 
@@ -77,17 +78,30 @@ export function checkConfigValidity(config: Config): ConfigCheckResult {
     stats.server = config.server
         ? {
               port: config.server.httpPort,
-              hostV4: config.server.httpHostV4,
-              hostV6: config.server.httpHostV6,
+              hostV4: config.server.listenV4
+                  ? config.server.httpHostV4
+                  : undefined,
+              hostV6: config.server.listenV6
+                  ? config.server.httpHostV6
+                  : undefined,
           }
         : undefined;
     stats.metrics = config.metrics?.enabled
         ? {
               port: config.metrics.port,
-              hostV4: config.metrics.hostV4,
-              hostV6: config.metrics.hostV6,
+              hostV4: config.metrics.listenV4
+                  ? config.metrics.hostV4
+                  : undefined,
+              hostV6: config.metrics.listenV6
+                  ? config.metrics.hostV6
+                  : undefined,
           }
         : undefined;
+
+    // Iterate over each project and check if some free upstream are desired
+    stats.freeUpstreamDesired = config.projects
+        .flatMap((p) => p?.upstreams)
+        .reduce((acc, u) => acc + (u?.type === "evm+free" ? 1 : 0), 0);
 
     // Check for projects duplication
     errors.push(...checkProjectsDuplication(config));

@@ -1,5 +1,6 @@
 import { build } from "gluegun";
 import { generateCmd } from "./commands/generate";
+import { getFreeRpcUrls } from "./commands/getFreeRpcUrl";
 import { validateCmd } from "./commands/validate";
 
 /**
@@ -22,6 +23,11 @@ const cli = build()
         description: "Check the validity of the eRPC config file",
         alias: ["check"],
         run: validateCmd,
+    })
+    .command({
+        name: "free-rpc",
+        description: "Get a list of free rpcs for a given chain",
+        run: getFreeRpcUrls,
     })
     .create();
 

@@ -6,7 +6,7 @@ export default defineConfig({
         "src/index.ts",
         "src/cli/index.ts",
     ],
-    external: ["viem"],
+    external: ["viem", "@ubiquity-dao/rpc-handler"],
     // Format waited
     format: ["cjs", "esm"],
     // Code splitting and stuff

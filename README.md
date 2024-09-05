@@ -12,6 +12,8 @@ This project is currently under active development. Features and API may change.
 - [x] Write YAML config file for eRPC config
 - [x] Helpers for networks, upstream, and auth configurations
 - [x] Support for various blockchain networks and RPC providers
+- [x] Automatic generation of free RPC upstreams using `evm+free` type
+- [x] Command to fetch best free RPC URLs for a given chain
 - [ ] More stuff within the CLI (config validity check, docker file generation, version specification etc)
 - [ ] Cleaner rate limit configuration and auto completion
 - [ ] Builder pattern with chaining (like `createProject(...).addRateLimits(...)/* a few more steps */.write(...)`)
@@ -78,6 +80,7 @@ bun erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-con
 # Explicitly use the generate command
 bun erpc-config generate --config ./custom-config.ts
 ```
+Note: When using `evm+free` upstream type, the generator will automatically fetch and include the 15 best free RPC URLs for the specified chain in the output YAML.
 
 ### Validate Command
 
@@ -98,6 +101,24 @@ bun erpc-config validate
 
 # Validate a specific config file
 bun erpc-config validate --config ./configs/my-erpc-config.ts
+```
+
+### Free RPC Command
+
+Fetch the 15 best free RPC URLs for a given chain:
+
+```
+erpc-config free-rpc --chain-id <chainId>
+```
+
+Options:
+  --chain-id    The chain ID to fetch free RPC URLs for (required)
+
+Example:
+
+```bash
+# Fetch free RPC URLs for Ethereum mainnet (chain ID 1)
+bun erpc-config free-rpc --chain-id 1
 ```
 
 ### General CLI Options
@@ -127,6 +148,7 @@ You can run these commands using `bun`, `npm`, or any other package runner of yo
 - `buildAlchemyUpstream({ apiKey, ...options })`: Configure Alchemy as an upstream provider.
 - `buildPimlicoUpstream({ apiKey, ...options })`: Configure Pimlico as an upstream provider.
 - `buildEvmUpstream<TRpc extends RpcSchema>({ id, endpoint, ...options })`: Configure a generic EVM upstream provider with customizable RPC schema.
+- `buildFreeUpstreams({ chains, ...options})`: Configure placeholder upstreams that will be filled with the 15 best free RPCs for the specified chain.
 
 ### Projects
 
@@ -149,6 +171,20 @@ The library exports two custom utility types:
 All other exported types (such as `Config`, `ServerConfig`, `DatabaseConfig`, etc.) are TypeScript representations of the original eRPC Go config type definitions. These provide strong typing for configuration objects and can be imported and used in your TypeScript projects.
 
 For a complete list of available types, refer to the type definitions in the library.
+
+## Dependencies
+
+This package relies on the following main dependencies:
+
+- [viem](https://viem.sh/): (Peer Dependency) A TypeScript interface for Ethereum, providing lightweight and type-safe modules for interacting with the blockchain.
+
+- [@ubiquity-dao/rpc-handler](https://github.com/ubiquity/rpc-handler): (Optional Peer Dependency) Used for fetching and comparing free RPC URLs from chainlist. Only required if you intend to use the free RPC features.
+
+- [erpc](https://www.erpc.cloud/): The core RPC load balancer that this config generator is designed for. It offers fault-tolerant EVM RPC load balancing with reorg-aware permanent caching and auto-discovery of node providers.
+
+- [gluegun](https://github.com/infinitered/gluegun): A toolkit used for building the command-line interface of this config generator, offering a robust set of utilities for creating TypeScript-powered CLI apps.
+
+Please ensure you have the required peer dependencies installed in your project when using this package. The `@ubiquity-dao/rpc-handler` is only necessary if you plan to utilize the free RPC functionality.
 
 ## Usage examples
 
