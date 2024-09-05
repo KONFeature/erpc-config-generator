@@ -1,5 +1,5 @@
 import type { GluegunToolbox } from "gluegun";
-import { getFreeUpstreamsForChain } from "../utils/upstream";
+import { getFreeRpcUrlsForChain } from "../utils/upstream";
 
 /**
  * The command to generate the eRPC config
@@ -14,7 +14,7 @@ export async function getFreeRpcUrls({ print, parameters }: GluegunToolbox) {
     print.info(`Fetching free rpcs for chain ${chainId}`);
 
     // Find the best rpcs
-    const rpcs = await getFreeUpstreamsForChain({ chainId: chainId });
+    const rpcs = await getFreeRpcUrlsForChain({ chainId: chainId });
 
     // Log the rpcs
     print.newline();

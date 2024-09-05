@@ -2,6 +2,7 @@ import type { GluegunToolbox } from "gluegun";
 import { checkConfigValidity } from "../utils/assertion";
 import { loadConfigFromFile } from "../utils/loader";
 import { printConfigError } from "../utils/printer";
+import { populateFreeRpcConfig } from "../utils/upstream";
 import { writeErpcConfig } from "../utils/writer";
 
 /**
@@ -30,7 +31,7 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
 
     // Load the user config
     spinner.text = "Loading typescript eRPC config";
-    const config = await loadConfigFromFile(configFile);
+    let config = await loadConfigFromFile(configFile);
 
     // Assert the config validity
     const { errors, hasFatalError, stats } = checkConfigValidity(config);
@@ -42,6 +43,15 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
     if (hasFatalError) {
         spinner.fail("Fatal error in the config file");
         return;
+    }
+
+    // If it has some free rpc placeholder, fill them
+    if (stats.freeUpstreamDesired > 0) {
+        print.newline();
+        spinner.warn(
+            "Free upstreams will be generated, be aware that it's not recommanded for production!"
+        );
+        config = await populateFreeRpcConfig({ config });
     }
 
     // Log a few info

@@ -9,7 +9,7 @@ database:
 projects:
   - rateLimitBudget: ""
     id: simple-erpc
-    networks:
+    networks: &var1
       - architecture: evm
         rateLimitBudget: ""
         evm:
@@ -28,29 +28,368 @@ projects:
           chainId: 11155420
           finalityDepth: 1024
           blockTrackerInterval: ""
+    upstreams: []
+  - rateLimitBudget: ""
+    id: free-erpc
+    networks: *var1
     upstreams:
-      - id: alchemy
-        endpoint: evm+alchemy://${ALCHEMY_API_KEY}
-        type: evm+alchemy
-        rateLimitBudget: ""
-        vendorName: Alchemy
-        ignoreMethods: []
-        allowMethods: []
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: &var2 []
+        allowMethods: &var3 []
         autoIgnoreUnsupportedMethods: true
-        failsafe:
-          timeout:
-            duration: 15s
-          retry:
-            maxAttempts: 2
-            delay: 1000ms
-            backoffMaxDelay: 10s
-            backoffFactor: 0.3
-            jitter: 500ms
-      - id: envio
-        endpoint: evm+envio://rpc.hypersync.xyz
-        rateLimitBudget: ""
-        type: evm+envio
-        vendorName: Envio
-        ignoreMethods: []
-        allowMethods: []
+        id: free-upstream-137-0x68747470733a2f2f656e64706f696e74732e6f6d6e6961746563682e696f2f76312f6d617469632f6d61696e6e65742f7075626c6963
+        endpoint: https://endpoints.omniatech.io/v1/matic/mainnet/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
         autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2d7270632e636f6d
+        endpoint: https://polygon-rpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f7270632e616e6b722e636f6d2f706f6c79676f6e
+        endpoint: https://rpc.ankr.com/polygon
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2d6d61696e6e65742e7075626c69632e626c6173746170692e696f
+        endpoint: https://polygon-mainnet.public.blastapi.io
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e626c6f636b70692e6e6574776f726b2f76312f7270632f7075626c6963
+        endpoint: https://polygon.blockpi.network/v1/rpc/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2d626f722d7270632e7075626c69636e6f64652e636f6d
+        endpoint: https://polygon-bor-rpc.publicnode.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2d6d61696e6e65742e727063666173742e636f6d3f6170695f6b65793d78626857424931576b67756b38534e4d75316276764c757250474c586d6777596543345336673248375764774669675a536d5057565a527872736b4551774966
+        endpoint: https://polygon-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e676174657761792e74656e6465726c792e636f
+        endpoint: https://polygon.gateway.tenderly.co
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e7270632e626c787262646e2e636f6d
+        endpoint: https://polygon.rpc.blxrbdn.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f676174657761792e74656e6465726c792e636f2f7075626c69632f706f6c79676f6e
+        endpoint: https://gateway.tenderly.co/public/polygon
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e647270632e6f7267
+        endpoint: https://polygon.drpc.org
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2d6d61696e6e65742e672e616c6368656d792e636f6d2f76322f64656d6f
+        endpoint: https://polygon-mainnet.g.alchemy.com/v2/demo
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e6c6c616d617270632e636f6d
+        endpoint: https://polygon.llamarpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f7270632d6d61696e6e65742e6d617469632e7175696b6e6f64652e70726f
+        endpoint: https://rpc-mainnet.matic.quiknode.pro
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var2
+        allowMethods: *var3
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-137-0x68747470733a2f2f706f6c79676f6e2e6d656f777270632e636f6d
+        endpoint: https://polygon.meowrpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: &var4 []
+        allowMethods: &var5 []
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-80002-0x68747470733a2f2f7270632d616d6f792e706f6c79676f6e2e746563686e6f6c6f6779
+        endpoint: https://rpc-amoy.polygon.technology
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var4
+        allowMethods: *var5
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-80002-0x68747470733a2f2f706f6c79676f6e2d616d6f792d626f722d7270632e7075626c69636e6f64652e636f6d
+        endpoint: https://polygon-amoy-bor-rpc.publicnode.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: &var6 []
+        allowMethods: &var7 []
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f7270632e616e6b722e636f6d2f617262697472756d
+        endpoint: https://rpc.ankr.com/arbitrum
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f656e64706f696e74732e6f6d6e6961746563682e696f2f76312f617262697472756d2f6f6e652f7075626c6963
+        endpoint: https://endpoints.omniatech.io/v1/arbitrum/one/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2d6f6e652e7075626c69632e626c6173746170692e696f
+        endpoint: https://arbitrum-one.public.blastapi.io
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f6172622d706f6b742e6e6f646965732e617070
+        endpoint: https://arb-pokt.nodies.app
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f7270632e746f726e61646f6574682e636173682f617262697472756d
+        endpoint: https://rpc.tornadoeth.cash/arbitrum
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2d6f6e652d7270632e7075626c69636e6f64652e636f6d
+        endpoint: https://arbitrum-one-rpc.publicnode.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2e626c6f636b70692e6e6574776f726b2f76312f7270632f7075626c6963
+        endpoint: https://arbitrum.blockpi.network/v1/rpc/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2d6f6e652e7075626c69636e6f64652e636f6d
+        endpoint: https://arbitrum-one.publicnode.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2e647270632e6f7267
+        endpoint: https://arbitrum.drpc.org
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2e6d656f777270632e636f6d
+        endpoint: https://arbitrum.meowrpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262312e617262697472756d2e696f2f727063
+        endpoint: https://arb1.arbitrum.io/rpc
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f617262697472756d2e6c6c616d617270632e636f6d
+        endpoint: https://arbitrum.llamarpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f317270632e696f2f617262
+        endpoint: https://1rpc.io/arb
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var6
+        allowMethods: *var7
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-42161-0x68747470733a2f2f6172622d6d61696e6e65742d7075626c69632e756e696672612e696f
+        endpoint: https://arb-mainnet-public.unifra.io
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: &var8 []
+        allowMethods: &var9 []
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f676174657761792e74656e6465726c792e636f2f7075626c69632f6f7074696d69736d
+        endpoint: https://gateway.tenderly.co/public/optimism
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f7270632e616e6b722e636f6d2f6f7074696d69736d
+        endpoint: https://rpc.ankr.com/optimism
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6d61696e6e65742e6f7074696d69736d2e696f
+        endpoint: https://mainnet.optimism.io
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f656e64706f696e74732e6f6d6e6961746563682e696f2f76312f6f702f6d61696e6e65742f7075626c6963
+        endpoint: https://endpoints.omniatech.io/v1/op/mainnet/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2d6d61696e6e65742e7075626c69632e626c6173746170692e696f
+        endpoint: https://optimism-mainnet.public.blastapi.io
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2e676174657761792e74656e6465726c792e636f
+        endpoint: https://optimism.gateway.tenderly.co
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2e6d656f777270632e636f6d
+        endpoint: https://optimism.meowrpc.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2d7270632e7075626c69636e6f64652e636f6d
+        endpoint: https://optimism-rpc.publicnode.com
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2e626c6f636b70692e6e6574776f726b2f76312f7270632f7075626c6963
+        endpoint: https://optimism.blockpi.network/v1/rpc/public
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2e647270632e6f7267
+        endpoint: https://optimism.drpc.org
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f702d706f6b742e6e6f646965732e617070
+        endpoint: https://op-pokt.nodies.app
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f317270632e696f2f6f70
+        endpoint: https://1rpc.io/op
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6170692e73746174656c6573732e736f6c7574696f6e732f6f7074696d69736d2f76312f66333733666562312d633865342d343163392d626237342d326336393139383864643334
+        endpoint: https://api.stateless.solutions/optimism/v1/f373feb1-c8e4-41c9-bb74-2c691988dd34
+        type: evm
+      - rateLimitBudget: ""
+        vendorName: Free RPC
+        ignoreMethods: *var8
+        allowMethods: *var9
+        autoIgnoreUnsupportedMethods: true
+        id: free-upstream-10-0x68747470733a2f2f6f7074696d69736d2e6c6c616d617270632e636f6d
+        endpoint: https://optimism.llamarpc.com
+        type: evm
