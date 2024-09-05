@@ -3,6 +3,7 @@
   "description": "Simple typescript tools to generate eRPC yaml config file",
   "version": "0.0.11",
   "author": "KONFeature",
+  "license":"Apache-2.0",
   "maintainers": [
     {
       "name": "Quentin Nivelais",
