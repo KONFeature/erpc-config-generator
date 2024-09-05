@@ -1,5 +1,13 @@
 # erpc-config-generator
 
+## 0.0.11
+
+### Patch Changes
+
+- [`91bb796`](https://github.com/KONFeature/erpc-config-generator/commit/91bb7965c85f927a168f61306b070392534a08c0) Thanks [@KONFeature](https://github.com/KONFeature)! - Update generated free upstream id to the format: `free-{rpcHostname}-{chainId}-{uuid}`
+
+- [`91bb796`](https://github.com/KONFeature/erpc-config-generator/commit/91bb7965c85f927a168f61306b070392534a08c0) Thanks [@KONFeature](https://github.com/KONFeature)! - Export `buildFreeUpstreams` builder
+
 ## 0.0.10
 
 ### Patch Changes
