@@ -1,5 +1,13 @@
 # erpc-config-generator
 
+## 0.0.12
+
+### Patch Changes
+
+- [`576e301`](https://github.com/KONFeature/erpc-config-generator/commit/576e3016e572f558f51db8718bfee2eef11c9360) Thanks [@KONFeature](https://github.com/KONFeature)! - More options for the free rpc benchmark during config, via the `freeRpcBenchmarkConfig` function
+
+- [`c154540`](https://github.com/KONFeature/erpc-config-generator/commit/c1545404f840a3a56bff7ff7cb7bba40bdfbb74a) Thanks [@KONFeature](https://github.com/KONFeature)! - Add multi run support for free rpc benchmarking
+
 ## 0.0.11
 
 ### Patch Changes
