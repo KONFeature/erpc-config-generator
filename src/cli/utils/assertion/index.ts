@@ -1,3 +1,4 @@
+import type { ErpcConfigWithStaticConfigs } from "../../../config";
 import type { Config } from "../../../generatedTypes/erpcTypes";
 import {
     checkRateLimitsDuplication,
@@ -35,12 +36,15 @@ export type ConfigError = {
 /**
  * Check the config validity
  */
-export function checkConfigValidity(config: Config): ConfigCheckResult {
+export function checkConfigValidity(
+    config: ErpcConfigWithStaticConfigs
+): ConfigCheckResult {
     // All the error we will face
     const errors: ConfigError[] = [];
     const stats: ConfigCheckResult["stats"] = {
         projects: 0,
         rateLimiters: 0,
+        freeUpstreamDesired: 0,
     };
 
     // Perform a few basics type checks

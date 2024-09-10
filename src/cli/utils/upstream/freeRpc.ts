@@ -4,75 +4,157 @@ import {
     RPCHandler,
 } from "@ubiquity-dao/rpc-handler";
 import { print } from "gluegun";
+import * as allChains from "viem/chains";
+import type { Chain } from "viem/chains";
+import type { RpcBenchmarkConfig } from "../../../config";
+import { type RpcBenchmarkResult, benchmarkRpcs } from "./rpcBenchmark";
 
 const baseRpcHandlerConfig: Omit<HandlerConstructorConfig, "networkId"> = {
     networkName: null,
     networkRpcs: null,
     runtimeRpcs: null,
-    autoStorage: false, // Not compatible with the free rpcs
-    cacheRefreshCycles: 10, // bad RPCs are excluded if they fail, this is how many cycles before they're re-tested
-    rpcTimeout: 1500, // max time to allow for a response. todo: should be configurable
-    tracking: "yes", //"yes" | "limited" | "none". todo: should be configurable
+    autoStorage: false,
+    cacheRefreshCycles: 1,
+    rpcTimeout: 1,
     proxySettings: {
-        retryCount: 5, // todo: should be configurable
-        retryDelay: 200, // todo: should be configurable
-        logTier: "info", // |"info"|"error"|"debug"|"fatal"|"verbose"; set to "none" for no logs, null will default to "error", "verbose" will log all
-        logger: null, // null will default to PrettyLogs todo: should use gluegun prints
-        strictLogs: false, // true, only the specified logTier will be logged and false all wll be logged.
-        moduleName: "[RPC Tester]", // Can be omitted. this is the prefix for the logs.
+        retryCount: 1,
+        retryDelay: 1,
+        logTier: "none",
+        logger: null,
+        strictLogs: false,
     },
 };
 
 /**
  * Method to fetch all the "best" free rpc services for a given chain
- *    - Best are upstream with latency < 500ms
- *    - Max 10 upstream will be returned
- * We will be using `@ubiquity-dao/rpc-handler` to fetch rpcs and latencies
+ * We will be using `@ubiquity-dao/rpc-handler` to fetch rpcs fron chainlist + perform a benchmark
  *  totally overkill tool, but fastet way to get this test done
  */
-export async function getFreeRpcUrlsForChain({ chainId }: { chainId: number }) {
-    const spinner = print.spin(
-        `Fetching the best free rpcs for chain ${chainId}`
-    );
+export async function getFreeRpcUrlsForChain({
+    chainId,
+    configResolver,
+}: { chainId: number; configResolver?: Promise<RpcBenchmarkConfig> }) {
+    const spinner = print.spin({
+        prefixText: `[RPCs benchmark on ${chainId}]`,
+        text: "Resolving the benchmark config",
+    });
+
+    // Fetch the benchmark config
+    const config = await configResolver;
 
     // Create our handler config
-    const config: HandlerConstructorConfig = {
-        networkId: chainId.toString() as NetworkId, // your chosen networkId
+    const handlerConfig: HandlerConstructorConfig = {
+        networkId: chainId.toString() as NetworkId,
+        tracking: config?.tracking,
         ...baseRpcHandlerConfig,
     };
 
-    // Create the handler and start to test the performace
-    const handler = new RPCHandler(config);
-    await handler.testRpcPerformance();
-    spinner.succeed(
-        `Performance test done for ${chainId} on ${handler.getNetworkRpcs().length} rpcs`
-    );
+    // Create the handler
+    //  todo: just used to fetch rpcs, and perform the tracking filtering, not needed in the long run
+    const handler = new RPCHandler(handlerConfig);
 
-    // Get all the computed latencies
-    const latencies = handler.getLatencies();
+    // Fetch every rpcs
+    const rpcs = handler.getNetworkRpcs().map((rpc) => rpc.url);
 
-    // Latencies array in ms in an array of objects { url: latency }
-    const validLatencies: Record<string, number> = Object.entries(latencies)
-        .filter(([key]) => key.startsWith(`${chainId}__`))
-        .sort(([, a], [, b]) => a - b)
-        .reduce(
-            (acc, [key, value]) => {
-                const url = key.split("__")[1];
-                acc[url] = value;
-                return acc;
-            },
-            {} as Record<string, number>
-        );
+    // Find the viem chain
+    const chain = Object.values(allChains).find((c) => c.id === chainId);
 
-    // Find every rpc under 500ms, and get the 10 first one
-    const bestRpcs = Object.entries(validLatencies)
-        .filter(([, latency]) => latency < 500)
-        .map(([url]) => url);
+    // Perform the benchmark
+    const results = await benchmarkRpcs({
+        rpcs,
+        chain,
+        config: config?.benchmark,
+    });
+
+    spinner.succeed(`Performance test done for  ${rpcs.length} rpcs`);
+
+    // Sort the success results by latency
+    let finalResults = results.success.sort((a, b) => a.latency - b.latency);
+
+    // If we got a naxRpcLatencyInMs, filter the results
+    const maxLatency = config?.maxRpcLatencyInMs;
+    if (maxLatency) {
+        finalResults = finalResults.filter((r) => r.latency < maxLatency);
+    }
+
+    // If we got a maxRpcCount, filter the results
+    if (config?.maxRpcCount) {
+        finalResults = finalResults.slice(0, config.maxRpcCount);
+    }
 
     print.info(
-        ` - Found ${bestRpcs.length} total rpcs under 500ms for ${chainId}`
+        ` - Found ${finalResults.length} rpcs matching all the criteria for ${chainId}`
     );
 
+    if (config?.debug) {
+        printDebugData({
+            chainId,
+            chain,
+            results,
+            rpcUrls: rpcs,
+            finalResults,
+        });
+    }
+
     // Return the 15 best rpcs
-    return bestRpcs.slice(0, 15);
+    return finalResults.map((r) => r.rpcUrl);
+}
+
+function printDebugData({
+    chainId,
+    chain,
+    results,
+    rpcUrls,
+    finalResults,
+}: {
+    chainId: number;
+    chain?: Chain;
+    rpcUrls: string[];
+    results: {
+        success: RpcBenchmarkResult[];
+        failed: (RpcBenchmarkResult | undefined)[];
+    };
+    finalResults: RpcBenchmarkResult[];
+}) {
+    print.info(`Debug data for chain ${chain?.name ?? chainId} (${chainId})`);
+    print.info(` - Initial rpcs: ${rpcUrls.length}`);
+    print.info(` - Success rpcs: ${results.success.length}`);
+    print.info(` - Failed rpcs: ${results.failed.length}`);
+    print.info(` - Final rpcs: ${finalResults.length}`);
+
+    // Create the table for the success rpcs
+    const successTable = results.success.map((r) => [
+        r.rpcUrl,
+        `${r.latency.toFixed(4)}ms`,
+    ]);
+    successTable.unshift(["RPC URL", "Latency"]);
+    print.divider();
+    print.info("Success RPCs:");
+    print.table(successTable, {
+        format: "lean",
+    });
+
+    // Create the one for the failed rpcs
+    const failedTable = results.failed.map((r) => [
+        r?.rpcUrl ?? "Unknown",
+        r?.error?.message ?? "Unknown",
+    ]);
+    failedTable.unshift(["RPC URL", "Error"]);
+    print.divider();
+    print.info("Failed RPCs:");
+    print.table(failedTable, {
+        format: "lean",
+    });
+
+    // Create the one for the final rpcs
+    const finalTable = finalResults.map((r) => [
+        r.rpcUrl,
+        `${r.latency.toFixed(4)}ms`,
+    ]);
+    finalTable.unshift(["RPC URL", "Latency"]);
+    print.divider();
+    print.info("Final RPCs:");
+    print.table(finalTable, {
+        format: "lean",
+    });
 }

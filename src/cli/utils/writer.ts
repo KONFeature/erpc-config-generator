@@ -15,6 +15,17 @@ export function writeErpcConfig({
     config,
     outputPath = "erpc.yaml",
 }: { config: Config; outputPath?: string }) {
+    // Strip down the config to only keep the field we want
+    config = {
+        logLevel: config.logLevel,
+        server: config.server,
+        metrics: config.metrics,
+        admin: config.admin,
+        database: config.database,
+        projects: config.projects,
+        rateLimiters: config.rateLimiters,
+    };
+
     // Stringify the config object
     const yamlStr = stringify(config, {
         lineWidth: -1, // Disable line wrapping

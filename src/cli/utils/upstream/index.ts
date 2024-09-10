@@ -1,5 +1,6 @@
 import { print } from "gluegun";
 import { keccak256, slice, toHex } from "viem";
+import type { ErpcConfigWithStaticConfigs } from "../../../config";
 import type {
     Config,
     ProjectConfig,
@@ -15,7 +16,7 @@ export { getFreeRpcUrlsForChain } from "./freeRpc";
  */
 export async function populateFreeRpcConfig({
     config,
-}: { config: Config }): Promise<Config> {
+}: { config: ErpcConfigWithStaticConfigs }): Promise<Config> {
     const projects: ProjectConfig[] = [];
 
     // Iterate over each projects
@@ -42,8 +43,14 @@ export async function populateFreeRpcConfig({
                 continue;
             }
 
+            // Get the potential benchmark config
+            const configResolver = config.freeRpcBenchmarkConfig?.(chainId);
+
             // Get the rpc urls for the chain
-            const rpcUrls = await getFreeRpcUrlsForChain({ chainId });
+            const rpcUrls = await getFreeRpcUrlsForChain({
+                chainId,
+                configResolver,
+            });
 
             // Build the new upstreams based on this rpc urls
             const upstreams: UpstreamConfig[] = rpcUrls.map((url) => {

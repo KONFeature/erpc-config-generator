@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { bundleRequire } from "bundle-require";
+import type { ErpcConfigWithStaticConfigs } from "../../config";
 import type { Config } from "../../generatedTypes/erpcTypes";
 
 /**
@@ -8,7 +9,9 @@ import type { Config } from "../../generatedTypes/erpcTypes";
  * @param configFile
  * @returns
  */
-export async function loadConfigFromFile(configFile: string): Promise<Config> {
+export async function loadConfigFromFile(
+    configFile: string
+): Promise<ErpcConfigWithStaticConfigs> {
     // Ensure the config file is a typescript one exist
     if (!configFile.endsWith(".ts")) {
         throw new Error("Config file must be a typescript file");
