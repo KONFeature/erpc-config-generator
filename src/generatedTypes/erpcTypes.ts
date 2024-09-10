@@ -145,11 +145,11 @@ export interface RetryPolicyConfig {
   jitter: string;
 }
 export interface CircuitBreakerPolicyConfig {
-  failureThresholdCount: number /* int */;
-  failureThresholdCapacity: number /* int */;
+  failureThresholdCount: number /* uint */;
+  failureThresholdCapacity: number /* uint */;
   halfOpenAfter: string;
-  successThresholdCount: number /* int */;
-  successThresholdCapacity: number /* int */;
+  successThresholdCount: number /* uint */;
+  successThresholdCapacity: number /* uint */;
 }
 export interface TimeoutPolicyConfig {
   duration: string;
@@ -167,7 +167,7 @@ export interface RateLimitBudgetConfig {
 }
 export interface RateLimitRuleConfig {
   method: string;
-  maxCount: number /* int */;
+  maxCount: number /* uint */;
   period: string;
   waitTime: string;
 }
