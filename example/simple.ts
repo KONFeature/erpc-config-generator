@@ -100,8 +100,8 @@ export default buildErpcConfig({
                 retryCount: 1,
                 retryDelayInMs: 1000,
                 rpcTimeoutInMs: 5000,
-                runs: 1,
-                runsIntervalInMs: 200,
+                runs: 3,
+                runsIntervalInMs: 500,
                 request: {
                     method: "eth_getLogs",
                     params: [{ fromBlock: toHex(latestBlock.number) }],

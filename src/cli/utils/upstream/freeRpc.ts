@@ -69,12 +69,14 @@ export async function getFreeRpcUrlsForChain({
     spinner.succeed(`Performance test done for  ${rpcs.length} rpcs`);
 
     // Sort the success results by latency
-    let finalResults = results.success.sort((a, b) => a.latency - b.latency);
+    let finalResults = results.success.sort(
+        (a, b) => a.avgLatency - b.avgLatency
+    );
 
     // If we got a naxRpcLatencyInMs, filter the results
     const maxLatency = config?.maxRpcLatencyInMs;
     if (maxLatency) {
-        finalResults = finalResults.filter((r) => r.latency < maxLatency);
+        finalResults = finalResults.filter((r) => r.avgLatency < maxLatency);
     }
 
     // If we got a maxRpcCount, filter the results
@@ -100,6 +102,9 @@ export async function getFreeRpcUrlsForChain({
     return finalResults.map((r) => r.rpcUrl);
 }
 
+/**
+ * Print some debug data
+ */
 function printDebugData({
     chainId,
     chain,
@@ -112,7 +117,7 @@ function printDebugData({
     rpcUrls: string[];
     results: {
         success: RpcBenchmarkResult[];
-        failed: (RpcBenchmarkResult | undefined)[];
+        failed: RpcBenchmarkResult[];
     };
     finalResults: RpcBenchmarkResult[];
 }) {
@@ -125,9 +130,19 @@ function printDebugData({
     // Create the table for the success rpcs
     const successTable = results.success.map((r) => [
         r.rpcUrl,
-        `${r.latency.toFixed(4)}ms`,
+        `${r.avgLatency.toFixed(4)}ms`,
+        ...r.runs.map((run) =>
+            run.success ? `${run.latency.toFixed(4)}ms` : run.error.message
+        ),
     ]);
-    successTable.unshift(["RPC URL", "Latency"]);
+    successTable.unshift([
+        "RPC URL",
+        "Avg Latency",
+        ...Array.from(
+            { length: results.success[0].runs.length },
+            (_, i) => `Run ${i + 1}`
+        ),
+    ]);
     print.divider();
     print.info("Success RPCs:");
     print.table(successTable, {
@@ -137,9 +152,17 @@ function printDebugData({
     // Create the one for the failed rpcs
     const failedTable = results.failed.map((r) => [
         r?.rpcUrl ?? "Unknown",
-        r?.error?.message ?? "Unknown",
+        ...r.runs.map((run) =>
+            run.success ? `${run.latency.toFixed(4)}ms` : run.error.message
+        ),
     ]);
-    failedTable.unshift(["RPC URL", "Error"]);
+    failedTable.unshift([
+        "RPC URL",
+        ...Array.from(
+            { length: results.success[0].runs.length },
+            (_, i) => `Run ${i + 1}`
+        ),
+    ]);
     print.divider();
     print.info("Failed RPCs:");
     print.table(failedTable, {
@@ -149,9 +172,9 @@ function printDebugData({
     // Create the one for the final rpcs
     const finalTable = finalResults.map((r) => [
         r.rpcUrl,
-        `${r.latency.toFixed(4)}ms`,
+        `${r.avgLatency.toFixed(4)}ms`,
     ]);
-    finalTable.unshift(["RPC URL", "Latency"]);
+    finalTable.unshift(["RPC URL", "Avg Latency"]);
     print.divider();
     print.info("Final RPCs:");
     print.table(finalTable, {
