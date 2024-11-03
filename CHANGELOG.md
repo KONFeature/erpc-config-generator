@@ -1,5 +1,11 @@
 # erpc-config-generator
 
+## 0.0.13
+
+### Patch Changes
+
+- [`99667a9`](https://github.com/KONFeature/erpc-config-generator/commit/99667a9f55be2c77113c5a16d555ff3319cebe70) Thanks [@KONFeature](https://github.com/KONFeature)! - Update erpc types for erpc `v0.0.27`
+
 ## 0.0.12
 
 ### Patch Changes
