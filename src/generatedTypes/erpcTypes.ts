@@ -9,11 +9,11 @@
 export interface Config {
   logLevel: string;
   server?: ServerConfig;
+  admin?: AdminConfig;
   database?: DatabaseConfig;
   projects: (ProjectConfig | undefined)[];
   rateLimiters?: RateLimiterConfig;
   metrics?: MetricsConfig;
-  admin?: AdminConfig;
 }
 export interface ServerConfig {
   listenV4: boolean;
@@ -25,6 +25,7 @@ export interface ServerConfig {
 }
 export interface AdminConfig {
   auth?: AuthConfig;
+  cors?: CORSConfig;
 }
 export interface DatabaseConfig {
   evmJsonRpcCache?: ConnectorConfig;
@@ -74,7 +75,6 @@ export interface AwsAuthConfig {
 }
 export interface ProjectConfig {
   id: string;
-  admin?: AdminConfig;
   auth?: AuthConfig;
   cors?: CORSConfig;
   upstreams: (UpstreamConfig | undefined)[];
@@ -103,6 +103,21 @@ export interface UpstreamConfig {
   failsafe?: FailsafeConfig;
   rateLimitBudget: string;
   rateLimitAutoTune?: RateLimitAutoTuneConfig;
+  routing?: RoutingConfig;
+}
+export interface RoutingConfig {
+  scoreMultipliers: (ScoreMultiplierConfig | undefined)[];
+}
+export interface ScoreMultiplierConfig {
+  network: string;
+  method: string;
+  overall: number /* float64 */;
+  errorRate: number /* float64 */;
+  p90latency: number /* float64 */;
+  totalRequests: number /* float64 */;
+  throttledRate: number /* float64 */;
+  blockHeadLag: number /* float64 */;
+  finalizationLag: number /* float64 */;
 }
 export type Alias = UpstreamConfig;
 export interface RateLimitAutoTuneConfig {
@@ -250,6 +265,17 @@ export type Network = any;
 //////////
 // source: upstream.go
 
+export type Scope = string;
+/**
+ * Policies must be created with a "network" in mind,
+ * assuming there will be many upstreams e.g. Retry might endup using a different upstream
+ */
+export const ScopeNetwork: Scope = "network";
+/**
+ * Policies must be created with one only "upstream" in mind
+ * e.g. Retry with be towards the same upstream
+ */
+export const ScopeUpstream: Scope = "upstream";
 export type UpstreamType = string;
 export const UpstreamTypeEvm: UpstreamType = "evm";
 export const UpstreamTypeEvmAlchemy: UpstreamType = "evm+alchemy";
@@ -259,6 +285,7 @@ export const UpstreamTypeEvmEnvio: UpstreamType = "evm+envio";
 export const UpstreamTypeEvmPimlico: UpstreamType = "evm+pimlico";
 export const UpstreamTypeEvmThirdweb: UpstreamType = "evm+thirdweb";
 export const UpstreamTypeEvmEtherspot: UpstreamType = "evm+etherspot";
+export const UpstreamTypeEvmInfura: UpstreamType = "evm+infura";
 export type Upstream = any;
 
 //////////
