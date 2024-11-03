@@ -52,17 +52,17 @@
     "changeset:version": "changeset version && bun install --lockfile-only"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.4",
     "@types/bun": "latest",
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.7",
-    "npm-check-updates": "^17.0.6",
-    "tsup": "^8.2.4"
+    "@changesets/cli": "^2.27.9",
+    "npm-check-updates": "^17.1.10",
+    "tsup": "^8.3.5"
   },
   "dependencies": {
     "bundle-require": "^5.0.0",
     "gluegun": "^5.2.0",
-    "yaml": "^2.5.0"
+    "yaml": "^2.6.0"
   }
 }

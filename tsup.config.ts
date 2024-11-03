@@ -12,6 +12,7 @@ export default defineConfig({
     // Code splitting and stuff
     clean: true,
     splitting: true,
+    minify: true,
     // Types config
     dts: {
         resolve: true,
