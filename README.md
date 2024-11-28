@@ -2,6 +2,15 @@
 
 A TypeScript-based configuration builder for [eRPC](https://github.com/erpc/erpc), the RPC load balancer for blockchain.
 
+> ⚠️ **Deprecation**: This project is slowly being moved directly inside [eRPC](https://github.com/erpc/erpc).
+>  [ERPC config package](https://www.npmjs.com/package/@erpc-cloud/config)
+
+- [x] Simple typescript config
+- [ ] https://github.com/erpc/erpc/pull/106 (Typescript chained builder pattern + strong types)
+- [ ] OxLib support for strongly typed rpc methods / evm related stuff
+- [ ] Helpers implementation (networks, upstreams, auth, caching, failsafe, etc)
+- [ ] And much more to come 👀
+
 ## 🚧 Work in Progress
 
 This project is currently under active development. Features and API may change.
