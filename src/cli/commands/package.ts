@@ -2,19 +2,18 @@ import type { GluegunToolbox } from "gluegun";
 import { checkConfigValidity } from "../utils/assertion";
 import { loadConfigFromFile } from "../utils/loader";
 import { printConfigError } from "../utils/printer";
-import { populateFreeRpcConfig } from "../utils/upstream";
 import { writeErpcConfig } from "../utils/writer";
 
 /**
- * The command to generate the eRPC config
+ * The command to package the eRPC config into a single js file
  */
-export async function generateCmd({ print, parameters }: GluegunToolbox) {
+export async function packageCmd({ print, parameters }: GluegunToolbox) {
     const spinner = print.spin({ text: "Generating eRPC config file" });
     spinner.start();
 
     // Extract the arguments
     const configFile = parameters.options.config ?? "./erpc-config.ts";
-    const outputFile = parameters.options.out ?? "./erpc.yaml";
+    const outputFile = parameters.options.out ?? "./erpc.js";
 
     if (typeof configFile !== "string") {
         throw new Error("Invalid config file");
@@ -31,7 +30,7 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
 
     // Load the user config
     spinner.text = "Loading typescript eRPC config";
-    let config = await loadConfigFromFile(configFile);
+    const config = await loadConfigFromFile(configFile);
 
     // Assert the config validity
     const { errors, hasFatalError, stats } = checkConfigValidity(config);
@@ -43,15 +42,6 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
     if (hasFatalError) {
         spinner.fail("Fatal error in the config file");
         return;
-    }
-
-    // If it has some free rpc placeholder, fill them
-    if (stats.freeUpstreamDesired > 0) {
-        print.newline();
-        spinner.warn(
-            "Free upstreams will be generated, be aware that it's not recommanded for production!"
-        );
-        config = await populateFreeRpcConfig({ config });
     }
 
     // Log a few info
@@ -82,6 +72,6 @@ export async function generateCmd({ print, parameters }: GluegunToolbox) {
 
     // Write the erpc config
     spinner.text = "Writing eRPC config file";
-    writeErpcConfig({ config, outputPath: outputFile });
+    writeErpcConfig({ configFile, outputPath: outputFile });
     spinner.succeed("eRPC config file written!");
 }

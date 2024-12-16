@@ -1,5 +1,4 @@
-import type { ErpcConfigWithStaticConfigs } from "../../../config";
-import type { Config } from "../../../generatedTypes/erpcTypes";
+import type { Config } from "@erpc-cloud/config";
 import {
     checkRateLimitsDuplication,
     checkRateLimitsReference,
@@ -13,16 +12,15 @@ type ConfigCheckResult = {
         projects: number;
         rateLimiters: number;
         server?: {
-            port: number;
+            port?: number;
             hostV4?: string;
             hostV6?: string;
         };
         metrics?: {
-            port: number;
+            port?: number;
             hostV4?: string;
             hostV6?: string;
         };
-        freeUpstreamDesired: number;
     };
 };
 
@@ -36,9 +34,7 @@ export type ConfigError = {
 /**
  * Check the config validity
  */
-export function checkConfigValidity(
-    config: ErpcConfigWithStaticConfigs
-): ConfigCheckResult {
+export function checkConfigValidity(config: Config): ConfigCheckResult {
     // All the error we will face
     const errors: ConfigError[] = [];
     const stats: ConfigCheckResult["stats"] = {
@@ -101,11 +97,6 @@ export function checkConfigValidity(
                   : undefined,
           }
         : undefined;
-
-    // Iterate over each project and check if some free upstream are desired
-    stats.freeUpstreamDesired = config.projects
-        .flatMap((p) => p?.upstreams)
-        .reduce((acc, u) => acc + (u?.type === "evm+free" ? 1 : 0), 0);
 
     // Check for projects duplication
     errors.push(...checkProjectsDuplication(config));

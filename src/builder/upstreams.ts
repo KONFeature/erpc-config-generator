@@ -1,24 +1,21 @@
+import type { UpstreamConfig } from "@erpc-cloud/config";
+import type { EIP1474Methods, PublicRpcSchema, RpcSchema } from "viem";
 import type {
-    BundlerRpcSchema,
-    Chain,
-    PublicRpcSchema,
-    RpcSchema,
-    WalletRpcSchema,
-} from "viem";
-import type { UpstreamConfig } from "./generatedTypes/erpcTypes";
-import type { RpcMethodWithRegex } from "./types/rpc";
-import type { OptionalRateLimit } from "./types/utils";
+    EnvioRpcSchema,
+    MatcherRpcMethodOrString,
+    PimlicoRpcSchema,
+} from "../types/builder";
 
 /**
- * Generic type to overide network config
+ * Generic type to overide upstream config
  */
 export type UpstreamOverride<TRpc extends RpcSchema> = Partial<
     Omit<
-        OptionalRateLimit<UpstreamConfig>,
+        UpstreamConfig,
         "id" | "endpoint" | "type" | "ignoreMethods" | "allowMethods"
     > & {
-        ignoreMethods?: RpcMethodWithRegex<TRpc>[];
-        allowMethods?: RpcMethodWithRegex<TRpc>[];
+        ignoreMethods?: MatcherRpcMethodOrString<TRpc>[];
+        allowMethods?: MatcherRpcMethodOrString<TRpc>[];
     }
 >;
 
@@ -27,12 +24,12 @@ export type UpstreamOverride<TRpc extends RpcSchema> = Partial<
  */
 export function buildEnvioUpstream({
     id = "envio",
-    endpoint = "evm+envio://rpc.hypersync.xyz",
+    endpoint = "envio://rpc.hypersync.xyz",
     ...options
 }: {
     id?: string;
     endpoint?: string;
-} & UpstreamOverride<PublicRpcSchema> = {}): UpstreamConfig {
+} & UpstreamOverride<EnvioRpcSchema> = {}) {
     return {
         // Base stuff
         id,
@@ -46,11 +43,12 @@ export function buildEnvioUpstream({
         autoIgnoreUnsupportedMethods: true,
         // Overide options
         ...options,
-    };
+    } as const satisfies UpstreamConfig;
 }
 
 /**
  * Build an alchemy upstream
+ * todo: Should also import the full alchemy schema
  */
 export function buildAlchemyUpstream({
     id = "alchemy",
@@ -59,13 +57,11 @@ export function buildAlchemyUpstream({
 }: {
     id?: string;
     apiKey: string;
-} & UpstreamOverride<
-    [...PublicRpcSchema, ...WalletRpcSchema]
->): UpstreamConfig {
+} & UpstreamOverride<EIP1474Methods>): UpstreamConfig {
     return {
         // Base stuff
         id,
-        endpoint: `evm+alchemy://${apiKey}`,
+        endpoint: `alchemy://${apiKey}`,
         type: "evm+alchemy",
         rateLimitBudget: options.rateLimitBudget ?? "",
         // Generic stuff
@@ -79,8 +75,61 @@ export function buildAlchemyUpstream({
 }
 
 /**
+ * Build a DRPC upstream
+ */
+export function buildDrpcUpstream({
+    id = "drpc",
+    apiKey,
+    ...options
+}: {
+    id?: string;
+    apiKey: string;
+} & UpstreamOverride<EIP1474Methods>): UpstreamConfig {
+    return {
+        // Base stuff
+        id,
+        endpoint: `drpc://${apiKey}`,
+        type: "evm+drpc",
+        rateLimitBudget: options.rateLimitBudget ?? "",
+        // Generic stuff
+        vendorName: "Drpc",
+        ignoreMethods: [],
+        allowMethods: [],
+        autoIgnoreUnsupportedMethods: true,
+        // Overide options
+        ...options,
+    };
+}
+
+/**
+ * Build an blast api upstream
+ */
+export function buildBlastApiUpstream({
+    id = "blastApi",
+    apiKey,
+    ...options
+}: {
+    id?: string;
+    apiKey: string;
+} & UpstreamOverride<EIP1474Methods>): UpstreamConfig {
+    return {
+        // Base stuff
+        id,
+        endpoint: `blastapi://${apiKey}`,
+        type: "evm+blastapi",
+        rateLimitBudget: options.rateLimitBudget ?? "",
+        // Generic stuff
+        vendorName: "Drpc",
+        ignoreMethods: [],
+        allowMethods: [],
+        autoIgnoreUnsupportedMethods: true,
+        // Overide options
+        ...options,
+    };
+}
+
+/**
  * Build a pimlico upstream
- * todo: Should include paymaster rpc schema when available
  */
 export function buildPimlicoUpstream({
     id = "pimlico",
@@ -89,11 +138,11 @@ export function buildPimlicoUpstream({
 }: {
     id?: string;
     apiKey?: string;
-} & UpstreamOverride<BundlerRpcSchema>): UpstreamConfig {
+} & UpstreamOverride<PimlicoRpcSchema>): UpstreamConfig {
     return {
         // Base stuff
         id,
-        endpoint: `evm+pimlico://${apiKey}`,
+        endpoint: `pimlico://${apiKey}`,
         rateLimitBudget: options.rateLimitBudget ?? "",
         type: "evm+pimlico",
         // Generic stuff
@@ -107,7 +156,7 @@ export function buildPimlicoUpstream({
 }
 
 /**
- * Get an evm upstream
+ * Build a regular evm upstream
  */
 export function buildEvmUpstream<TRpc extends RpcSchema = PublicRpcSchema>({
     id,
@@ -132,33 +181,4 @@ export function buildEvmUpstream<TRpc extends RpcSchema = PublicRpcSchema>({
         // Overide options
         ...options,
     };
-}
-
-/**
- * Get an evm upstream
- */
-export function buildFreeUpstreams<TRpc extends RpcSchema = PublicRpcSchema>({
-    chains,
-    ...options
-}: {
-    chains: Chain[];
-    rpcSchema?: TRpc;
-} & UpstreamOverride<TRpc>): UpstreamConfig[] {
-    return chains.map((chain) => {
-        return {
-            // Base stuff
-            rateLimitBudget: options.rateLimitBudget ?? "",
-            // Generic stuff
-            vendorName: "Generic Evm",
-            ignoreMethods: [],
-            allowMethods: [],
-            autoIgnoreUnsupportedMethods: true,
-            // Overide options
-            ...options,
-            // Specific stuff to build the free upstream during config generation
-            id: `free-upstream-${chain.id}`,
-            endpoint: `evm+free://${chain.id}`,
-            type: "evm+free",
-        };
-    });
 }

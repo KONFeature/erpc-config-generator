@@ -1,5 +1,5 @@
+import type { Config } from "@erpc-cloud/config";
 import type { ConfigError } from ".";
-import type { Config } from "../../../generatedTypes/erpcTypes";
 
 /**
  * Check that the config doesn't contain duplicated rate limits id
@@ -97,9 +97,8 @@ export function checkRateLimitsReference({
         });
 
         // Check the networks
-        const networksRateLimits = project?.networks.map(
-            (network) => network?.rateLimitBudget
-        );
+        const networksRateLimits =
+            project?.networks?.map((network) => network?.rateLimitBudget) ?? [];
         checkRateLimits({
             rateLimits: networksRateLimits,
             field: `project.${project.id}.networks.rateLimitBudget`,

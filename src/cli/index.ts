@@ -1,6 +1,5 @@
 import { build } from "gluegun";
-import { generateCmd } from "./commands/generate";
-import { getFreeRpcUrls } from "./commands/getFreeRpcUrl";
+import { packageCmd } from "./commands/package";
 import { validateCmd } from "./commands/validate";
 
 /**
@@ -13,21 +12,15 @@ const cli = build()
     .version() // provides default for version, v, --version, -v
     .command({
         name: "erpc-config",
-        description:
-            "Generate an eRPC yaml config file from the typescript config",
+        description: "Package the eRPC config file into a single js file",
         alias: ["generate"],
-        run: generateCmd,
+        run: packageCmd,
     })
     .command({
         name: "validate",
         description: "Check the validity of the eRPC config file",
         alias: ["check"],
         run: validateCmd,
-    })
-    .command({
-        name: "free-rpc",
-        description: "Get a list of free rpcs for a given chain",
-        run: getFreeRpcUrls,
     })
     .create();
 

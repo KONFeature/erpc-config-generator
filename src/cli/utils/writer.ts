@@ -1,40 +1,41 @@
-import { writeFileSync } from "node:fs";
-import { stringify } from "yaml";
-import type { Config } from "../../generatedTypes/erpcTypes";
-
-/// Header for the generate file
-const header =
-    "# Config generated using: https://github.com/KONFeature/erpc-config-generator";
+import { build } from "esbuild";
+import { print } from "gluegun";
 
 /**
  * Write the `erpc.yaml` output file
  * @param config
  * @param outputPath
  */
-export function writeErpcConfig({
-    config,
-    outputPath = "erpc.yaml",
-}: { config: Config; outputPath?: string }) {
-    // Strip down the config to only keep the field we want
-    config = {
-        logLevel: config.logLevel,
-        server: config.server,
-        metrics: config.metrics,
-        admin: config.admin,
-        database: config.database,
-        projects: config.projects,
-        rateLimiters: config.rateLimiters,
-    };
-
-    // Stringify the config object
-    const yamlStr = stringify(config, {
-        lineWidth: -1, // Disable line wrapping
-        anchorPrefix: "var",
+export async function writeErpcConfig({
+    configFile,
+    outputPath = "erpc.js",
+}: { configFile: string; outputPath?: string }) {
+    const spinner = print.spin({ text: "Writing bundled eRPC config file" });
+    // First initial esbuild
+    spinner.start();
+    spinner.text = "Pre bundle using esbuild";
+    const result = await build({
+        entryPoints: [configFile],
+        outfile: outputPath,
+        // Terser will handle minification
+        bundle: true,
+        minify: true,
+        splitting: false,
+        // Drop any console or debugger related code
+        sourcemap: "inline",
+        // erpc-cloud/config is included inside the src docker image
+        external: ["@erpc-cloud/config"],
     });
+    if (result.errors.length > 0) {
+        spinner.fail("Failed to write eRPC config file");
+        spinner.stop();
 
-    // Add a top level header mentioning it's auto generated
-    const finalString = `${header}\n${yamlStr}`;
-
-    // Write it to the file
-    writeFileSync(outputPath, finalString);
+        print.newline();
+        print.error("Errors:");
+        for (const error of result.errors) {
+            print.error(` - ${error}`);
+        }
+        return;
+    }
+    spinner.succeed("Bundled eRPC config file written successfully");
 }

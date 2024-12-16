@@ -6,7 +6,7 @@ export default defineConfig({
         "src/index.ts",
         "src/cli/index.ts",
     ],
-    external: ["viem", "@ubiquity-dao/rpc-handler"],
+    external: ["viem", "esbuild", "@erpc-cloud/config"],
     // Format waited
     format: ["cjs", "esm"],
     // Code splitting and stuff

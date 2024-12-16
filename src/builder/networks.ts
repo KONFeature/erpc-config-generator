@@ -1,8 +1,5 @@
+import type { EvmNetworkConfig, NetworkConfig } from "@erpc-cloud/config";
 import type { Chain } from "viem";
-import type {
-    EvmNetworkConfig,
-    NetworkConfig,
-} from "./generatedTypes/erpcTypes";
 
 /**
  * Partial EVM network config, without chainId (since it will came from the viem chain)
@@ -57,9 +54,9 @@ export function buildEvmNetworks<
             rateLimitBudget: rateLimitBudget,
             evm: {
                 chainId: chain.id,
-                finalityDepth: options.evm?.finalityDepth ?? 1024,
-                blockTrackerInterval: options?.evm?.blockTrackerInterval ?? "",
+                fallbackFinalityDepth:
+                    options.evm?.fallbackFinalityDepth ?? 1024,
             },
         };
-    });
+    }) satisfies NetworkConfig[];
 }

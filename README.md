@@ -2,14 +2,10 @@
 
 A TypeScript-based configuration builder for [eRPC](https://github.com/erpc/erpc), the RPC load balancer for blockchain.
 
-> ⚠️ **Deprecation**: This project is slowly being moved directly inside [eRPC](https://github.com/erpc/erpc).
->  [ERPC config package](https://www.npmjs.com/package/@erpc-cloud/config)
+It now used the exported [`@erpc-cloud/config`](https://github.com/erpc/erpc) package from eRPC for all the types.
 
-- [x] Simple typescript config
-- [ ] https://github.com/erpc/erpc/pull/106 (Typescript chained builder pattern + strong types)
-- [ ] OxLib support for strongly typed rpc methods / evm related stuff
-- [ ] Helpers implementation (networks, upstreams, auth, caching, failsafe, etc)
-- [ ] And much more to come 👀
+This package add the builder pattern and provide a more type safe way to create your configuration, with a few static cli helpers.
+
 
 ## 🚧 Work in Progress
 
@@ -17,20 +13,20 @@ This project is currently under active development. Features and API may change.
 
 ## Features
 
-- [x] TypeScript types for eRPC config
-- [x] Write YAML config file for eRPC config
-- [x] Helpers for networks, upstream, and auth configurations
+- [x] Builder pattern with type safe rate limits
+- [x] Helpers for networks, upstream
 - [x] Support for various blockchain networks and RPC providers
-- [x] Automatic generation of free RPC upstreams using `evm+free` type
 - [x] Command to fetch best free RPC URLs for a given chain
-- [ ] More stuff within the CLI (config validity check, docker file generation, version specification etc)
-- [ ] Cleaner rate limit configuration and auto completion
-- [ ] Builder pattern with chaining (like `createProject(...).addRateLimits(...)/* a few more steps */.write(...)`)
+- [x] CLI with pre validation + bundling command
+- [x] Matcher pattern for rpc methods
+- [ ] Automatic generation of free RPC upstreams using `evm+free` type
+- [ ] More stuff within the CLI (docker file generation, initial config file, cli config updates)
+- [ ] And much more to come 👀
 
 ## Installation
 
 ```bash
-bun add @konfeature/erpc-config-generator
+bun add @konfeature/erpc-config-generator @erpc-cloud/config
 ```
 
 ## Usage
@@ -38,44 +34,77 @@ bun add @konfeature/erpc-config-generator
 1. Create a TypeScript file (e.g., `erpc-config.ts`) that exports a full `Config` object as default:
 
 ```typescript
-import { Config, buildEvmNetworks, buildRateLimit, buildAlchemyUpstream, buildProject, envVariable } from '@konfeature/erpc-config-generator';
+import { initErpcConfig } from "@konfeature/erpc-config-generator";
 
-// ... (configuration setup)
-
-const config: Config = {
-  // Your eRPC configuration
-};
-
-export default config;
+export default initErpcConfig({
+  logLevel: "info",
+})
+  .addRateLimiters({
+    // Rate limiter budget for the porject
+    projectBudget: [
+      {
+        method: "*",
+        period: "1s",
+        waitTime: "1m",
+        maxCount: 1000,
+      },
+    ],
+    // Rate limiter for the upstream
+    upstreamBudget: [
+      {
+        method: "*",
+        period: "1s",
+        waitTime: "1m",
+        maxCount: 1000,
+      },
+    ],
+  })
+  .addProject({
+    // Project with one upstream
+    id: "main-project",
+    upstreams: [
+      {
+        id: "upstream-1",
+        endpoint: "http://localhost:3000",
+        rateLimitBudget: "upstreamBudget",
+      },
+    ],
+    rateLimitBudget: "projectBudget",
+  })
+  .build()
 ```
 
-2. Run the CLI command to generate the YAML configuration:
+> Note the `.build()` at the end, it's mandatory for it to export nicely and be recognized by the CLI.
+
+2. Run the CLI command to generate the bundled JS configuration:
 
 ```bash
 bunx erpc-config
 ```
 
-This will read the `erpc-config.ts` file in the current directory and output the configuration to `erpc.yaml`.
+This will read the `erpc-config.ts` file in the current directory and output the configuration to `erpc.js`.
+
+> **Note:** You can bundle the configuration with the bundler of your choice (bun build, esbuild, terser, etc.)
 
 ## CLI Usage
 
 The eRPC Config Generator CLI provides two main commands: `generate` (default) and `validate`.
 
-### Generate Command
+### Package Command
 
-Generate an eRPC YAML config file from the TypeScript config:
+Package an eRPC JS config file from the TypeScript config:
 
 ```
 erpc-config [options]
 ```
 or
 ```
-erpc-config generate [options]
+erpc-config package [options]
 ```
 
 Options:
   --config    The path to the config file (default: "./erpc-config.ts")
-  --out       The output file path (default: "./erpc.yaml")
+  --out       The output file path (default: "./erpc.js")
 
 Examples:
 
@@ -84,12 +113,11 @@ Examples:
 bun erpc-config
 
 # Specify custom input and output paths
-bun erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-config.yaml
+bun erpc-config --config ./configs/my-erpc-config.ts --out ./configs/my-erpc-config.js
 
-# Explicitly use the generate command
-bun erpc-config generate --config ./custom-config.ts
+# Explicitly use the package command
+bun erpc-config package --config ./custom-config.ts
 ```
-Note: When using `evm+free` upstream type, the generator will automatically fetch and include the 15 best free RPC URLs for the specified chain in the output YAML.
 
 ### Validate Command
 
@@ -112,24 +140,6 @@ bun erpc-config validate
 bun erpc-config validate --config ./configs/my-erpc-config.ts
 ```
 
-### Free RPC Command
-
-Fetch the 15 best free RPC URLs for a given chain:
-
-```
-erpc-config free-rpc --chain-id <chainId>
-```
-
-Options:
-  --chain-id    The chain ID to fetch free RPC URLs for (required)
-
-Example:
-
-```bash
-# Fetch free RPC URLs for Ethereum mainnet (chain ID 1)
-bun erpc-config free-rpc --chain-id 1
-```
-
 ### General CLI Options
 
 - `--help`, `-h`: Show help information
@@ -139,13 +149,18 @@ You can run these commands using `bun`, `npm`, or any other package runner of yo
 
 ## API Overview
 
-### Environment Variables
+### Builder Methods
 
-- `envVariable(name: string)`: Helper function to reference environment variables in the config.
+- **`initErpcConfig(config: InitConfig)`**: Initializes the configuration with basic settings such as `logLevel` and `server` properties.
 
-### Rate Limits
+- **`addRateLimiters(budgets: Record\<TKeys,RateLimitRuleConfig[]>)`**: Adds rate limiters to your configuration.
 
-- `buildRateLimit<TRpc extends RpcSchema = EIP1474Methods>({ id, rules })`: Create a rate limit configuration with customizable RPC schema, for type completion.
+- **`decorate(scope: "upstreams" | "networks", value: Record\<TStoreKey, NetworkConfig | UpstreamConfig>)`**: Adds values to the store for `networks` or `upstreams`.
+
+  - **Scope**: Determines which store (`networks` or `upstreams`) to push values to.
+  - **Value**: The static values to add the the builder store
+
+- **`addProject(project: ProjectConfig | ({config: Config, store: Store} => ProjectConfig))`**: Adds a project to your configuration.
 
 ### Networks
 
@@ -159,45 +174,21 @@ You can run these commands using `bun`, `npm`, or any other package runner of yo
 - `buildEvmUpstream<TRpc extends RpcSchema>({ id, endpoint, ...options })`: Configure a generic EVM upstream provider with customizable RPC schema.
 - `buildFreeUpstreams({ chains, ...options})`: Configure placeholder upstreams that will be filled with the 15 best free RPCs for the specified chain.
 
-### Projects
-
-- `buildProject(projectConfig)`: Create a project configuration.
-
-### Authentication
-
-- `buildNetworkAuthStrategy<TRpc extends RpcSchema>({ network, ...baseOptions })`: Configure network-based authentication.
-- `buildSecretAuthStrategy<TRpc extends RpcSchema>({ secret, ...baseOptions })`: Configure secret-based authentication.
-- `buildJwtAuthStrategy<TRpc extends RpcSchema>({ jwt, ...baseOptions })`: Configure JWT-based authentication.
-- `buildSiweAuthStrategy<TRpc extends RpcSchema>({ siwe, ...baseOptions })`: Configure Sign-In with Ethereum authentication.
-
-### Types
-
-The library exports two custom utility types:
-
-- `RpcMethodWithRegex<TRpc>`: Represents RPC methods, including support for wildcard patterns.
-- `OptionalRateLimit<T>`: Makes the `rateLimitBudget` field optional in a type that includes it.
-
-All other exported types (such as `Config`, `ServerConfig`, `DatabaseConfig`, etc.) are TypeScript representations of the original eRPC Go config type definitions. These provide strong typing for configuration objects and can be imported and used in your TypeScript projects.
-
-For a complete list of available types, refer to the type definitions in the library.
-
 ## Dependencies
 
 This package relies on the following main dependencies:
 
 - [viem](https://viem.sh/): (Peer Dependency) A TypeScript interface for Ethereum, providing lightweight and type-safe modules for interacting with the blockchain.
 
-- [@ubiquity-dao/rpc-handler](https://github.com/ubiquity/rpc-handler): (Optional Peer Dependency) Used for fetching and comparing free RPC URLs from chainlist. Only required if you intend to use the free RPC features.
-
 - [erpc](https://www.erpc.cloud/): The core RPC load balancer that this config generator is designed for. It offers fault-tolerant EVM RPC load balancing with reorg-aware permanent caching and auto-discovery of node providers.
 
 - [gluegun](https://github.com/infinitered/gluegun): A toolkit used for building the command-line interface of this config generator, offering a robust set of utilities for creating TypeScript-powered CLI apps.
 
-Please ensure you have the required peer dependencies installed in your project when using this package. The `@ubiquity-dao/rpc-handler` is only necessary if you plan to utilize the free RPC functionality.
-
 ## Usage examples
 
 For a simple setup, please refer to the [simple example](example/simple.ts) in the repository.
+
+You can check a more [complete example here](/typescript/config/example/full.ts).
 
 ## Real-World Usage
 
@@ -216,17 +207,17 @@ The entire configuration is contained in a single file:
 
 - `erpc-config.ts`: The main configuration file that exports the complete eRPC config
 
-To generate the YAML configuration from this setup, the project uses:
+To generate the JS configuration from this setup, the project uses:
 
 ```bash
-pnpm erpc-config
+bun erpc-config
 ```
 
-The resulting YAML configuration is output to:
+The resulting JS configuration is output to:
 
-- `erpc.yaml`: The generated eRPC configuration file
+- `erpc.js`: The generated eRPC configuration file
 
-This example showcases how to integrate the eRPC Config Generator into a larger project, using pnpm as the package manager. It's a great reference for structuring your own eRPC configuration in a production environment.
+This example showcases how to integrate the eRPC Config Generator into a larger project, using bun as the package manager. It's a great reference for structuring your own eRPC configuration in a production environment.
 
 You can use this as a template for your own project, adjusting the network configurations, upstreams, and other settings as needed for your specific use case.
 
