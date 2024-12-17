@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "typescript": "^5.5.4",
-    "@erpc-cloud/config": "^0.0.10",
+    "@erpc-cloud/config": "^0.0.11",
     "viem": "^2.19.7",
     "permissionless": "^0.2.23"
   },
@@ -59,6 +59,7 @@
     "@types/bun": "latest",
     "bun": "^1.1.38",
     "npm-check-updates": "^17.1.11",
+    "@erpc-cloud/config": "^0.0.11",
     "tsup": "^8.3.5"
   },
   "dependencies": {
