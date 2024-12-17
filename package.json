@@ -1,7 +1,7 @@
 {
   "name": "@konfeature/erpc-config-generator",
   "description": "Simple typescript tools to generate eRPC yaml config file",
-  "version": "0.0.13",
+  "version": "0.1.0",
   "author": "KONFeature",
   "license": "Apache-2.0",
   "maintainers": [
