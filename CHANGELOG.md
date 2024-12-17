@@ -1,5 +1,15 @@
 # erpc-config-generator
 
+## 0.1.0
+
+### Minor Changes
+
+- [`b334abc`](https://github.com/KONFeature/erpc-config-generator/commit/b334abc4904ff0ef2248a52f44a087fbec4992bb) Thanks [@KONFeature](https://github.com/KONFeature)! - - Introduce the builder pattern using `initErpcConfig`
+  - Remove auto generated type and move to the exported type of `@erpc-cloud/config`
+  - Review upstreams builder helpers for a wider support of the matching pattern
+  - Remove YAML file generation, since erpc now support js/ts config file
+  - Remove free rpc benchmark for now, currently envisaging multiple way to re-introduce it later, maybe using dynamic config or the selection eval policy?
+
 ## 0.0.13
 
 ### Patch Changes
