@@ -1,5 +1,11 @@
 # erpc-config-generator
 
+## 0.1.1
+
+### Patch Changes
+
+- [`5ded23b`](https://github.com/KONFeature/erpc-config-generator/commit/5ded23b52880dc6308d2ed870dea55a2f9780cae) Thanks [@KONFeature](https://github.com/KONFeature)! - Upgrade to @erpc-cloud/config v0.0.36 (supporting providers, proxy pools etc) + add providers in thebuilder store (so available with `decorate` method)`
+
 ## 0.1.0
 
 ### Minor Changes
