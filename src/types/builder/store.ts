@@ -1,4 +1,8 @@
-import type { NetworkConfig, UpstreamConfig } from "@erpc-cloud/config";
+import type {
+    NetworkConfig,
+    ProjectConfig,
+    UpstreamConfig,
+} from "@erpc-cloud/config";
 
 /**
  * The store for the builder, containg some helper methods
@@ -7,9 +11,12 @@ export type BuilderStore<
     // biome-ignore lint/suspicious/noExplicitAny: any key are supported
     TUpstreamKeys extends keyof any,
     // biome-ignore lint/suspicious/noExplicitAny: any key are supported
+    TProviderKeys extends keyof any,
+    // biome-ignore lint/suspicious/noExplicitAny: any key are supported
     TNetworkKeys extends keyof any,
 > = {
     upstreams: Record<TUpstreamKeys, BuilderStoreValues["upstreams"]>;
+    providers: Record<TProviderKeys, BuilderStoreValues["providers"]>;
     networks: Record<TNetworkKeys, BuilderStoreValues["networks"]>;
 };
 
@@ -18,13 +25,15 @@ export type BuilderStore<
  */
 export type BuilderStoreValues = {
     upstreams: UpstreamConfig;
+    // crapy import, not re-exported from erpc-config
+    providers: ProjectConfig["providers"][number];
     networks: NetworkConfig;
 };
 
 /**
  * Simple representation of the builder store, to ease type access
  */
-export type AnyBuilderStore = BuilderStore<string, string>;
+export type AnyBuilderStore = BuilderStore<string, string, string>;
 
 /**
  * Helper types to add new `TNewKeys` keys to the store in the `TScope` scope.

@@ -47,6 +47,7 @@
     "build": "tsup --splitting",
     "build:watch": "tsup --watch --splitting --format esm",
     "update:deps": "npm-check-updates -ui",
+    "typecheck": "tsc",
     "example": "bun run build && bun run erpc-config --config ./example/simple.ts --out ./example/simple.js",
     "changeset:release": "bun run build && changeset publish",
     "changeset:version": "changeset version && bun install --lockfile-only"
@@ -55,16 +56,16 @@
     "@biomejs/biome": "1.9.4",
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.10",
+    "@changesets/cli": "^2.27.12",
     "@types/bun": "latest",
-    "bun": "^1.1.38",
-    "npm-check-updates": "^17.1.11",
-    "@erpc-cloud/config": "^0.0.11",
-    "tsup": "^8.3.5"
+    "bun": "^1.2.1",
+    "npm-check-updates": "^17.1.14",
+    "@erpc-cloud/config": "^0.0.36",
+    "tsup": "^8.3.6"
   },
   "dependencies": {
-    "bundle-require": "^5.0.0",
-    "esbuild": "^0.24.0",
+    "bundle-require": "^5.1.0",
+    "esbuild": "^0.24.2",
     "gluegun": "^5.2.0"
   }
 }

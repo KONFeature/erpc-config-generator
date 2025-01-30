@@ -24,12 +24,18 @@ import type {
  */
 class ConfigBuilder<
     TConfig extends Partial<Config> = object,
-    TStore extends BuilderStore<string, string> = BuilderStore<never, never>,
+    TStore extends BuilderStore<string, string, string> = BuilderStore<
+        never,
+        never,
+        never
+    >,
 > {
     private config: TConfig;
     private store: TStore;
 
-    constructor(config: Omit<Config, "rateLimiters" | "projects">) {
+    constructor(
+        config: Omit<Config, "rateLimiters" | "projects" | "proxyPools">
+    ) {
         this.config = config as TConfig;
         this.store = {
             upstreams: {},
@@ -231,7 +237,9 @@ class ConfigBuilder<
  * @returns A fresh builder instance.
  */
 export function initErpcConfig<
-    TInitial extends Omit<Config, "rateLimiters" | "projects">,
->(baseConfig: TInitial): ConfigBuilder<TInitial, BuilderStore<never, never>> {
+    TInitial extends Omit<Config, "rateLimiters" | "projects" | "proxyPools">,
+>(
+    baseConfig: TInitial
+): ConfigBuilder<TInitial, BuilderStore<never, never, never>> {
     return new ConfigBuilder(baseConfig);
 }

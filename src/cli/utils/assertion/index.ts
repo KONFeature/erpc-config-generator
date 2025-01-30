@@ -40,7 +40,6 @@ export function checkConfigValidity(config: Config): ConfigCheckResult {
     const stats: ConfigCheckResult["stats"] = {
         projects: 0,
         rateLimiters: 0,
-        freeUpstreamDesired: 0,
     };
 
     // Perform a few basics type checks
