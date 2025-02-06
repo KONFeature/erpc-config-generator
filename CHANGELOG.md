@@ -1,5 +1,11 @@
 # erpc-config-generator
 
+## 0.1.2
+
+### Patch Changes
+
+- [`14f858e`](https://github.com/KONFeature/erpc-config-generator/commit/14f858e645d7b0b44fc4bbfd2734284aecfecf9a) Thanks [@KONFeature](https://github.com/KONFeature)! - Upgrade to @erpc-cloud/config v0.0.39
+
 ## 0.1.1
 
 ### Patch Changes
