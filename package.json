@@ -35,10 +35,10 @@
     }
   },
   "peerDependencies": {
-    "typescript": "^5.5.4",
+    "typescript": "^5.7.3",
     "@erpc-cloud/config": "^0.0.11",
-    "viem": "^2.19.7",
-    "permissionless": "^0.2.23"
+    "viem": "^2.22.17",
+    "permissionless": "^0.2.28"
   },
   "scripts": {
     "format": "biome check --write .",
@@ -58,9 +58,9 @@
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.12",
     "@types/bun": "latest",
-    "bun": "^1.2.1",
+    "bun": "^1.2.2",
     "npm-check-updates": "^17.1.14",
-    "@erpc-cloud/config": "^0.0.36",
+    "@erpc-cloud/config": "^0.0.39",
     "tsup": "^8.3.6"
   },
   "dependencies": {

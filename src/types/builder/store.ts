@@ -1,6 +1,6 @@
 import type {
     NetworkConfig,
-    ProjectConfig,
+    ProviderConfig,
     UpstreamConfig,
 } from "@erpc-cloud/config";
 
@@ -25,8 +25,7 @@ export type BuilderStore<
  */
 export type BuilderStoreValues = {
     upstreams: UpstreamConfig;
-    // crapy import, not re-exported from erpc-config
-    providers: ProjectConfig["providers"][number];
+    providers: ProviderConfig;
     networks: NetworkConfig;
 };
 
